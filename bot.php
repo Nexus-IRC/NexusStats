@@ -284,20 +284,34 @@ function create_stats ($chan = null) {
 	}
 }
 
-function reset_stats () {
-	$datei = "/home/stats/channel.cfg";
-	$array = file($datei);
-	foreach ($array as $element) {
-		$a=explode("|",$element);
-		@unlink("/home/stats/pisg-0.73/log/".substr($a[0], 1).".log");
-		@unlink("/var/customers/webs/nexus/stats/archiv/".substr($a[0], 1).".php");
+function reset_stats ($chan = null) {
+	if(isset($chan)){ //optional
+		@unlink("/home/stats/pisg-0.73/log/".substr($chan, 1).".log");
+		@unlink("/var/customers/webs/nexus/stats/archiv/".substr($chan, 1).".php");
 		mkdir("/var/customers/webs/nexus/stats/archiv/", 0755);
-		copy("/var/customers/webs/nexus/stats/chan/".substr($a[0], 1).".php", "/var/customers/webs/nexus/stats/archiv/".substr($a[0], 1).".php");
-		@unlink("/var/customers/webs/nexus/stats/chan/".substr($a[0], 1).".php");
-		privmsg($a[0],"Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($a[0], 1));
+		copy("/var/customers/webs/nexus/stats/chan/".substr($chan, 1).".php", "/var/customers/webs/nexus/stats/archiv/".substr($chan, 1).".php");
+		@unlink("/var/customers/webs/nexus/stats/chan/".substr($chan, 1).".php");
+		privmsg($chan,"Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($chan, 1));
+		create_log(substr($chan, 1), "[".@date("H:i")."] <NexusStats> Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($chan, 1));
+		create_stats ($chan);
+	}else{
+		$datei = "/home/stats/channel.cfg";
+		$array = file($datei);
+		foreach ($array as $element) {
+			$a=explode("|",$element);
+			@unlink("/home/stats/pisg-0.73/log/".substr($a[0], 1).".log");
+			@unlink("/var/customers/webs/nexus/stats/archiv/".substr($a[0], 1).".php");
+			mkdir("/var/customers/webs/nexus/stats/archiv/", 0755);
+			copy("/var/customers/webs/nexus/stats/chan/".substr($a[0], 1).".php", "/var/customers/webs/nexus/stats/archiv/".substr($a[0], 1).".php");
+			@unlink("/var/customers/webs/nexus/stats/chan/".substr($a[0], 1).".php");
+			privmsg($a[0],"Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($a[0], 1));
+			create_log(substr($a[0], 1), "[".@date("H:i")."] <NexusStats> Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($a[0], 1));
+		}
+		create_stats ();
+		create_timer("24h","stats");
 	}
-	create_timer("24h","stats");
 }
+
 
 function debug ($chan, $data = null) {
 	if(isset($data)){ //optional
