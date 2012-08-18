@@ -117,6 +117,13 @@ if ($exp[1] == "354") {
 							break;
 						}
 						break;
+					case "?debug":
+						if($host[1] == $admin){
+							debug($exp[2]);						
+						}else{
+							break;
+						}
+						break;
                 }
             }
         }

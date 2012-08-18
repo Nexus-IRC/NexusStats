@@ -33,6 +33,7 @@ $socket = fsockopen($server,$port,$errstr,$errno,2);
 $dltimer = array();
 $timer = time();
 $stime = time();
+$fgr = "";
 stream_set_blocking($socket,0);
 putSocket("PASS ".$pass);
 putSocket("NICK ".$botnick);
@@ -44,6 +45,7 @@ while (true) {
         $dltimer = array();
         $timer = time();
 		$stime = time();
+		$fgr = "";
         stream_set_blocking($socket,0);
         putSocket("PASS ".$pass);
 		putSocket("NICK ".$botnick);
@@ -60,7 +62,9 @@ while (true) {
     }
     usleep(1000);
     while ($fg = fgets($socket)) {
+		global $fgr;
 		$fg = utf8_decode(str_replace("\r","",str_replace("\n","",$fg)));
+		$fgr = $fg
         echo ("<<".$fg."\n");
         flush();
         $exp = explode(" ",$fg);
@@ -293,6 +297,33 @@ function reset_stats () {
 		privmsg($a[0],"Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($a[0], 1));
 	}
 	create_timer("24h","stats");
+}
+
+function debug ($chan) {
+	global $fgr;
+	$fg = $fgr;
+	$ex1 = explode(":",$fg,3);
+	$ex2 = explode(" ",$ex1[2],2);
+	if(isset($ex2[1])){
+		ob_start();
+		$ret = eval($ex2[1]);
+		$out = ob_get_contents();
+		ob_end_clean();
+		$lines = explode("\n",$out);
+		for($i=0;$i<count($lines);$i++) {
+			if($lines[$i]!="") {
+				privmsg($chan,$lines[$i]);
+			}
+		}
+		$lines = explode("\n",$ret);
+		for($i=0;$i<count($lines);$i++) {
+			if($lines[$i]!="") {
+				privmsg($chan,$lines[$i]);
+			}
+		}
+	}else{
+		break;
+	}	
 }
 
 function timer_evnts ($time, $call) {
