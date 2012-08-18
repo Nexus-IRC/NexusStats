@@ -107,6 +107,12 @@
 							break;
 						}
 						break;
+					case $trigger."version":
+						notice($nick, "NexusStats v1.8, written by Stricted");
+						notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git;a=summary");
+						notice($nick, "special thanks to:");
+						notice($nick, " Ultrashadow  (testing and ideas)");
+						break;
                 }
             }
         }
