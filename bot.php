@@ -266,7 +266,7 @@ function check_stats () {
 	}
 }
 
-function create_stats ($chan) {
+function create_stats ($chan = null) {
 	if(isset($chan)){ //optional
 		$cha = @substr($chan, 1);
 		@unlink("/var/customers/webs/nexus/stats/chan/".$cha.".php");
@@ -299,14 +299,10 @@ function reset_stats () {
 	create_timer("24h","stats");
 }
 
-function debug ($chan) {
-	global $fgr;
-	$fg = $fgr;
-	$ex1 = explode(":",$fg,3);
-	$ex2 = explode(" ",$ex1[2],2);
-	if(isset($ex2[1])){
+function debug ($chan, $data = null) {
+	if(isset($data)){ //optional
 		ob_start();
-		$ret = eval($ex2[1]);
+		$ret = eval($data);
 		$out = ob_get_contents();
 		ob_end_clean();
 		$lines = explode("\n",$out);
@@ -322,8 +318,29 @@ function debug ($chan) {
 			}
 		}
 	}else{
-		break;
-	}	
+		global $fgr;
+		$fg = $fgr;
+		$ex1 = explode(":",$fg,3);
+		$ex2 = explode(" ",$ex1[2],2);
+		if(isset($ex2[1])){
+			ob_start();
+			$ret = eval($ex2[1]);
+			$out = ob_get_contents();
+			ob_end_clean();
+			$lines = explode("\n",$out);
+			for($i=0;$i<count($lines);$i++) {
+				if($lines[$i]!="") {
+					privmsg($chan,$lines[$i]);
+				}
+			}
+			$lines = explode("\n",$ret);
+			for($i=0;$i<count($lines);$i++) {
+				if($lines[$i]!="") {
+					privmsg($chan,$lines[$i]);
+				}
+			}
+		}
+	}
 }
 
 function timer_evnts ($time, $call) {
