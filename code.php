@@ -22,12 +22,12 @@ if ($exp[1] == "354") {
 			$kk = explode(":",$fg,3);
 			$act = explode(" ",$kk[2],2);
 			if($act[0] == "\001ACTION"){
-				if($nick == "NexusStats" OR $nick == "NexusStats|ZNC" OR $cha == "NexusStats" OR $cha == "NexusStats|ZNC" OR $cha == "exusStats" OR $cha == "exusStats|ZNC") {
+				if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
 				}else{
 					create_log($cha,"[".@date("H:i")."] * ".$nick." ".$act[1]);
 				}
 			}elseif($act[0] == "\001VERSION\001"){
-				notice($nick,"\001VERSION 1.8 - Parser: ".PHP_VERSION);
+				notice($nick,"\001VERSION 1.8-public - Parser: ".PHP_VERSION);
 			}elseif($act[0] == "\001UPTIME\001"){
 				notice($nick,"\001UPTIME ".time2str(time() - $stime));
 			}elseif($act[0] == "\001TIME\001"){
@@ -37,7 +37,7 @@ if ($exp[1] == "354") {
 				$ping = ($act[1] - (60*60*1337 + 42*60));
 				notice($nick,"\001PING ".$ping);
 			}else{
-				if($nick == "NexusStats" OR $nick == "NexusStats|ZNC" OR $cha == "NexusStats" OR $cha == "NexusStats|ZNC" OR $cha == "exusStats" OR $cha == "exusStats|ZNC") {
+				if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
 				}else{
 					create_log($cha,"[".@date("H:i")."] <".$nick."> ".$kk[2]);
 				}
@@ -65,7 +65,7 @@ if ($exp[1] == "354") {
 					case "?reg":
 						if($host[1] == $admin){
 							if($exp[4]){
-								$inhalt = file_get_contents("/home/stats/noreg.cfg");	
+								$inhalt = file_get_contents($botdir."noreg.cfg");	
 								if ( stristr($inhalt, $exp[4]) == true ) {
 									notice($nick,"Der Channel: ".$exp[4]." steht auf der not register liste.");
 								} else {						
@@ -97,7 +97,7 @@ if ($exp[1] == "354") {
 					case "?clist":
 						if($host[1] == $admin){
 							require_once("Table.class.php");
-							$datei = "/home/stats/channel.cfg";
+							$datei = $botdir."channel.cfg";
 							$array = file($datei);
 							#print_r($array);
 							$table = new Table(2);
@@ -133,10 +133,10 @@ if ($exp[1] == "354") {
 			}else{
 				$chan = $exp[3];
 			}
-			$inhalt = file_get_contents("/home/stats/noreg.cfg");	
+			$inhalt = file_get_contents($botdir."noreg.cfg");	
 			if ( stristr($inhalt, $chan) == true ) {
 			} else {
-				$inhalt1 = file_get_contents("/home/stats/channel.cfg");	
+				$inhalt1 = file_get_contents($botdir."channel.cfg");	
 				if ( stristr($inhalt1, $chan) == true ) {
 					putSocket("join ".$exp[3]);
 				}else{
@@ -146,7 +146,7 @@ if ($exp[1] == "354") {
 			}
 		}
         if ($exp[1] == "JOIN") {
-			if($nick == "NexusStats" OR $nick == "NexusStats|ZNC") {
+			if($nick == $botnick OR $nick == $botnick."|ZNC") {
 			}else{
 				if($exp[2][0] == ":") {
 					$cha2 = @substr($exp[2], 1);
@@ -160,7 +160,7 @@ if ($exp[1] == "354") {
 			}
         }
         if ($exp[1] == "PART") {
-			if($nick == "NexusStats" OR $nick == "NexusStats|ZNC") {
+			if($nick == $botnick OR $nick == $botnick."|ZNC") {
 			}else{
 				if($exp[2][0] == ":") {
 					$cha2 = @substr($exp[2], 1);
@@ -175,13 +175,13 @@ if ($exp[1] == "354") {
         }
 		if ($exp[1] == "MODE") {
 			$cha = @substr($exp[2], 1);
-			if($nick == "NexusStats" OR $nick == "NexusStats|ZNC" OR $cha == "NexusStats" OR $cha == "NexusStats|ZNC" OR $cha == "exusStats" OR $cha == "exusStats|ZNC") {
+			if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
 			}else{
 				create_log($cha,"[".@date("H:i")."] *** ".$nick." sets mode: ".$exp[3]." ".$exp[4]);
 			}
 		}
 		if ($exp[1] == "KICK") {
-			if($exp[3] == "NexusStats" OR $exp[3] == "NexusStats|ZNC") {
+			if($exp[3] == $botnick OR $exp[3] == $botnick."|ZNC") {
 				putSocket("part ".$exp[2]);
 				del_chan($exp[2]);
 			}else{

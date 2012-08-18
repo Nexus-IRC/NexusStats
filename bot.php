@@ -18,7 +18,7 @@
 ***********************************************************************/
 echo("##############################\n");
 echo("#### Starting NexusStats  ####\n");
-echo("#### version 1.8          ####\n");
+echo("#### version 1.8-public   ####\n");
 echo("#### coded by Stricted    ####\n");
 echo("##############################\n");
 /* config start */
@@ -27,6 +27,14 @@ $port 		= "8001";
 $botnick 	= "NexusStats";
 $pass 		= "NexusStats:xxxx";
 $admin 		= "Stricted2.user.OnlineGamesNet";
+$logdir 	= "/home/stats/pisg-0.73/log/";
+$cfgdir		= "/home/stats/pisg-0.73/cfg/";
+$statsdir	= "/var/customers/webs/nexus/stats/chan/";
+$archivdir	= "/var/customers/webs/nexus/stats/archiv/";
+$pisgdir	= "/home/stats/pisg-0.73/";
+$botdir		= "/home/stats/";
+$url		= "http://stats.nexus-irc.de/?c=";
+$aurl		= "http://stats.nexus-irc.de/?ac=";
 /* config end */
 set_time_limit(0);
 $socket = fsockopen($server,$port,$errstr,$errno,2);
@@ -76,7 +84,7 @@ while (true) {
             putSocket("PONG ".$exp[1]);
         }
         if ($exp[1] == "001") {
-            #putSocket("JOIN #nexus"); 
+            #putSocket("JOIN #nexus"); //debug code
 			create_timer("12h","stats");
         }
 		eval(file_get_contents("code.php"));
@@ -93,39 +101,42 @@ function create_timer ($time, $line) {
 }
 
 function create_log ($channel, $data) {
-	$inhalt1 = file_get_contents("/home/stats/noreg.cfg");	
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	$inhalt1 = file_get_contents($botdir."noreg.cfg");	
 	if ( stristr($inhalt1, $channel) == true ) {
 	}else{
-		$inhalt2 = file_get_contents("/home/stats/channel.cfg");	
+		$inhalt2 = file_get_contents($botdir."channel.cfg");	
 		if ( stristr($inhalt2, $channel) == true ) {
-			$inhalt = file_get_contents("/home/stats/pisg-0.73/log/".$channel.".log");
-			file_put_contents("/home/stats/pisg-0.73/log/".$channel.".log", $inhalt .= $data."\n");
+			$inhalt = file_get_contents($logdir.$channel.".log");
+			file_put_contents($logdir.$channel.".log", $inhalt .= $data."\n");
 		}else{ 
 		}
 	}
 }
 
 function create_noreg ($channel, $nick) {
-	$inhalt = file_get_contents("/home/stats/noreg.cfg");
-	file_put_contents("/home/stats/noreg.cfg", $inhalt .= $channel."\n");
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	$inhalt = file_get_contents($botdir."noreg.cfg");
+	file_put_contents($botdir."noreg.cfg", $inhalt .= $channel."\n");
 	del_chan ($channel);
 	putSocket("PART ".$channel." :Unregistered by ".$nick.".");
 }
 
 function create_chan ($channel) {
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
 	$cha = @substr($channel, 1);
-	@unlink("/home/stats/pisg-0.73/cfg/".$cha.".cfg");
+	@unlink($cfgdir.$cha.".cfg");
 	$text1  = "<channel='".$channel."'>\n";
-	$text2  = "Logfile = '/home/stats/pisg-0.73/log/".$cha.".log'\n";
+	$text2  = "Logfile = '".$logdir.$cha.".log'\n";
 	$text3  = "ColorScheme = 'default'\n";
 	$text4  = "Format = 'mIRC'\n";
 	$text5  = "Lang = 'EN'\n";
 	$text6  = "DailyActivity = '31'\n";	
 	$text7  = "Network= 'OnlineGamesNet'\n";
-	$text8  = "Maintainer = 'NexusStats'\n";
-	$text9  = "OutputFile = '/var/customers/webs/nexus/stats/chan/".$cha.".php'\n";
+	$text8  = "Maintainer = '".$botnick."'\n";
+	$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
 	$text10 = "</channel>\n";
-	$dateiname = "/home/stats/pisg-0.73/cfg/".$cha.".cfg"; 
+	$dateiname = $cfgdir.$cha.".cfg"; 
 	$handler = fOpen($dateiname , "a+");
 	fWrite($handler , $text1);
 	fWrite($handler , $text2);
@@ -138,25 +149,26 @@ function create_chan ($channel) {
 	fWrite($handler , $text9);
 	fWrite($handler , $text10);
 	fClose($handler);
-	$inhalt = file_get_contents("/home/stats/channel.cfg");
-	file_put_contents("/home/stats/channel.cfg", $inhalt .= $channel."|EN\n");
+	$inhalt = file_get_contents($botdir."channel.cfg");
+	file_put_contents($botdir."channel.cfg", $inhalt .= $channel."|EN\n");
 }
 
 function set_lang ($chan, $lang) {
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
 	$cha = @substr($chan, 1);
-	if (file_exists("/home/stats/pisg-0.73/cfg/".$cha.".cfg")) {
-		@unlink("/home/stats/pisg-0.73/cfg/".$cha.".cfg");
+	if (file_exists($cfgdir.$cha.".cfg")) {
+		@unlink($cfgdir.$cha.".cfg");
 		$text1  = "<channel='".$chan."'>\n";
-		$text2  = "Logfile = '/home/stats/pisg-0.73/log/".$cha.".log'\n";
+		$text2  = "Logfile = '".$logdir.$cha.".log'\n";
 		$text3  = "ColorScheme = 'default'\n";
 		$text4  = "Format = 'mIRC'\n";
 		$text5  = "Lang = '".$lang."'\n";
 		$text6  = "DailyActivity = '31'\n";	
 		$text7  = "Network= 'OnlineGamesNet'\n";
-		$text8  = "Maintainer = 'NexusStats'\n";
-		$text9  = "OutputFile = '/var/customers/webs/nexus/stats/chan/".$cha.".php'\n";
+		$text8  = "Maintainer = '".$botnick."'\n";
+		$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
 		$text10 = "</channel>\n";
-		$dateiname = "/home/stats/pisg-0.73/cfg/".$cha.".cfg"; 
+		$dateiname = $cfgdir.$cha.".cfg"; 
 		$handler = fOpen($dateiname , "a+");
 		fWrite($handler , $text1);
 		fWrite($handler , $text2);
@@ -169,7 +181,7 @@ function set_lang ($chan, $lang) {
 		fWrite($handler , $text9);
 		fWrite($handler , $text10);
 		fClose($handler);
-		$myfile = file_get_contents("/home/stats/channel.cfg");
+		$myfile = file_get_contents($botdir."channel.cfg");
 		$myexp  = explode("\n", $myfile);
 		$i = 0;
 		while (@($myexp[$i])) {
@@ -184,35 +196,36 @@ function set_lang ($chan, $lang) {
 			}
 			$i++;
 		}
-		$fp = fopen("/home/stats/channel.cfg","w+");
+		$fp = fopen($botdir."channel.cfg","w+");
 		fwrite($fp, $myfilenew);
 		fclose($fp);
-		$inhalt = file_get_contents("/home/stats/channel.cfg");
-		file_put_contents("/home/stats/channel.cfg", $inhalt .= $chan."|".$lang."\n");
-		@unlink("/var/customers/webs/nexus/stats/chan/".$cha.".php");
-		shell_exec("/home/stats/pisg-0.73/pisg --configfile=cfg/".$cha.".cfg");
-		privmsg($chan,"Stats Update: http://stats.nexus-irc.de/?c=".$cha);	
+		$inhalt = file_get_contents($botdir."channel.cfg");
+		file_put_contents($botdir."channel.cfg", $inhalt .= $chan."|".$lang."\n");
+		@unlink($statsdir.$cha.".php");
+		shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
+		privmsg($chan,"Stats Update: ".$url.$cha);	
 	}else{
 	}
 }
 
 function create_conf () {
-	$datei = "/home/stats/channel.cfg";
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	$datei = $botdir."channel.cfg";
 	$array = file($datei);
 	foreach ($array as $element) {
 		$a=explode("|",$element);
-		@unlink("/home/stats/pisg-0.73/cfg/".substr($a[0], 1).".cfg");
+		@unlink($cfgdir.substr($a[0], 1).".cfg");
 		$text1  = "<channel='#".substr($a[0], 1)."'>\n";
-		$text2  = "Logfile = '/home/stats/pisg-0.73/log/".substr($a[0], 1).".log'\n";
+		$text2  = "Logfile = '".$logdir.substr($a[0], 1).".log'\n";
 		$text3  = "ColorScheme = 'default'\n";
 		$text4  = "Format = 'mIRC'\n";
 		$text5  = "Lang = '".substr($a[1], 0, -1)."'\n";
 		$text6  = "DailyActivity = '31'\n";	
 		$text7  = "Network= 'OnlineGamesNet'\n";
-		$text8  = "Maintainer = 'NexusStats'\n";
-		$text9  = "OutputFile = '/var/customers/webs/nexus/stats/chan/".substr($a[0], 1).".php'\n";
+		$text8  = "Maintainer = '".$botnick."'\n";
+		$text9  = "OutputFile = '".$statsdir.substr($a[0], 1).".php'\n";
 		$text10 = "</channel>\n";
-		$dateiname = "/home/stats/pisg-0.73/cfg/".substr($a[0], 1).".cfg"; 
+		$dateiname = $cfgdir.substr($a[0], 1).".cfg"; 
 		$handler = fOpen($dateiname , "a+");
 		fWrite($handler , $text1);
 		fWrite($handler , $text2);
@@ -229,13 +242,14 @@ function create_conf () {
 }
 
 function del_chan ($channel) {
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
 	$myfilenew = NULL;
 	$cha = @substr($channel, 1);
-	@unlink("/home/stats/pisg-0.73/cfg/".$cha.".cfg");
-	@unlink("/home/stats/pisg-0.73/log/".$cha.".log");
-	@unlink("/var/customers/webs/nexus/stats/chan/".$cha.".php");
+	@unlink($cfgdir.$cha.".cfg");
+	@unlink($logdir.$cha.".log");
+	@unlink($statsdir.$cha.".php");
 
-	$myfile = file_get_contents("/home/stats/channel.cfg");
+	$myfile = file_get_contents($botdir."channel.cfg");
 	$myexp  = explode("\n", $myfile);
 	$i = 0;
 	while (@($myexp[$i])) {
@@ -251,7 +265,7 @@ function del_chan ($channel) {
 		}
 		$i++;
 	}
-	$fp = fopen("/home/stats/channel.cfg","w+");
+	$fp = fopen($botdir."channel.cfg","w+");
 	fwrite($fp, $myfilenew);
 	fclose($fp);
 }
@@ -267,45 +281,47 @@ function check_stats () {
 }
 
 function create_stats ($chan = null) {
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
 	if(isset($chan)){ //optional
 		$cha = @substr($chan, 1);
-		@unlink("/var/customers/webs/nexus/stats/chan/".$cha.".php");
-		shell_exec("/home/stats/pisg-0.73/pisg --configfile=cfg/".$cha.".cfg");
-		privmsg($chan,"Stats Update: http://stats.nexus-irc.de/?c=".$cha);
+		@unlink($statsdir.$cha.".php");
+		shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
+		privmsg($chan,"Stats Update: ".$url.$cha);
 	}else{	
-		$datei = "/home/stats/channel.cfg";
+		$datei = $botdir."channel.cfg";
 		$array = file($datei);
 		foreach ($array as $element) {
 			$a=explode("|",$element);
-			shell_exec("/home/stats/pisg-0.73/pisg --configfile=cfg/".substr($a[0], 1).".cfg\n");
-			privmsg($a[0],"Stats Update: http://stats.nexus-irc.de/?c=".substr($a[0], 1));
+			shell_exec($pisgdir."pisg --configfile=".$cfgdir.substr($a[0], 1).".cfg\n");
+			privmsg($a[0],"Stats Update: ".$url.substr($a[0], 1));
 		}
 		create_timer("12h","stats");
 	}
 }
 
 function reset_stats ($chan = null) {
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
 	if(isset($chan)){ //optional
-		@unlink("/home/stats/pisg-0.73/log/".substr($chan, 1).".log");
-		@unlink("/var/customers/webs/nexus/stats/archiv/".substr($chan, 1).".php");
-		mkdir("/var/customers/webs/nexus/stats/archiv/", 0755);
-		copy("/var/customers/webs/nexus/stats/chan/".substr($chan, 1).".php", "/var/customers/webs/nexus/stats/archiv/".substr($chan, 1).".php");
-		@unlink("/var/customers/webs/nexus/stats/chan/".substr($chan, 1).".php");
-		privmsg($chan,"Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($chan, 1));
-		create_log(substr($chan, 1), "[".@date("H:i")."] <NexusStats> Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($chan, 1));
+		@unlink($logdir.substr($chan, 1).".log");
+		@unlink($archivdir.substr($chan, 1).".php");
+		mkdir($archivdir, 0755);
+		copy($statsdir.substr($chan, 1).".php", $archivdir.substr($chan, 1).".php");
+		@unlink($statsdir.substr($chan, 1).".php");
+		privmsg($chan,"Stats Reset, Archiv: ".$aurl.substr($chan, 1));
+		create_log(substr($chan, 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.substr($chan, 1));
 		create_stats ($chan);
 	}else{
-		$datei = "/home/stats/channel.cfg";
+		$datei = $botdir."channel.cfg";
 		$array = file($datei);
 		foreach ($array as $element) {
 			$a=explode("|",$element);
-			@unlink("/home/stats/pisg-0.73/log/".substr($a[0], 1).".log");
-			@unlink("/var/customers/webs/nexus/stats/archiv/".substr($a[0], 1).".php");
-			mkdir("/var/customers/webs/nexus/stats/archiv/", 0755);
-			copy("/var/customers/webs/nexus/stats/chan/".substr($a[0], 1).".php", "/var/customers/webs/nexus/stats/archiv/".substr($a[0], 1).".php");
-			@unlink("/var/customers/webs/nexus/stats/chan/".substr($a[0], 1).".php");
-			privmsg($a[0],"Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($a[0], 1));
-			create_log(substr($a[0], 1), "[".@date("H:i")."] <NexusStats> Stats Reset, Archiv: http://stats.nexus-irc.de/?ac=".substr($a[0], 1));
+			@unlink($logdir.substr($a[0], 1).".log");
+			@unlink($archivdir.substr($a[0], 1).".php");
+			mkdir($archivdir, 0755);
+			copy($statsdir.substr($a[0], 1).".php", $archivdir.substr($a[0], 1).".php");
+			@unlink($statsdir.substr($a[0], 1).".php");
+			privmsg($a[0],"Stats Reset, Archiv: ".$aurl.substr($a[0], 1));
+			create_log(substr($a[0], 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: "$aurl.substr($a[0], 1));
 		}
 		create_stats ();
 		create_timer("24h","stats");
