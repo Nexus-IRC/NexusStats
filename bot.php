@@ -153,6 +153,7 @@ function create_chan ($channel) {
 	fClose($handler);
 	$inhalt = file_get_contents($botdir."channel.cfg");
 	file_put_contents($botdir."channel.cfg", $inhalt .= $channel."|".$defaultlang."\n");
+	putSocket("join ".$channel);
 }
 
 function set_lang ($chan, $lang) {
@@ -210,24 +211,22 @@ function set_lang ($chan, $lang) {
 	}
 }
 
-function create_conf () {
+function create_conf ($channel = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
-	$datei = $botdir."channel.cfg";
-	$array = file($datei);
-	foreach ($array as $element) {
-		$a=explode("|",$element);
-		@unlink($cfgdir.substr($a[0], 1).".cfg");
-		$text1  = "<channel='#".substr($a[0], 1)."'>\n";
-		$text2  = "Logfile = '".$logdir.substr($a[0], 1).".log'\n";
+	if(isset($channel)){//optional
+		$cha = @substr($channel, 1);
+		@unlink($cfgdir.$cha.".cfg");
+		$text1  = "<channel='".$channel."'>\n";
+		$text2  = "Logfile = '".$logdir.$cha.".log'\n";
 		$text3  = "ColorScheme = 'default'\n";
 		$text4  = "Format = 'mIRC'\n";
-		$text5  = "Lang = '".substr($a[1], 0, -1)."'\n";
+		$text5  = "Lang = '".$lang."'\n";
 		$text6  = "DailyActivity = '31'\n";	
 		$text7  = "Network= 'OnlineGamesNet'\n";
 		$text8  = "Maintainer = '".$botnick."'\n";
-		$text9  = "OutputFile = '".$statsdir.substr($a[0], 1).".php'\n";
+		$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
 		$text10 = "</channel>\n";
-		$dateiname = $cfgdir.substr($a[0], 1).".cfg"; 
+		$dateiname = $cfgdir.$cha.".cfg"; 
 		$handler = fOpen($dateiname , "a+");
 		fWrite($handler , $text1);
 		fWrite($handler , $text2);
@@ -240,6 +239,36 @@ function create_conf () {
 		fWrite($handler , $text9);
 		fWrite($handler , $text10);
 		fClose($handler);
+	}else{
+		$datei = $botdir."channel.cfg";
+		$array = file($datei);
+		foreach ($array as $element) {
+			$a=explode("|",$element);
+			@unlink($cfgdir.substr($a[0], 1).".cfg");
+			$text1  = "<channel='#".substr($a[0], 1)."'>\n";
+			$text2  = "Logfile = '".$logdir.substr($a[0], 1).".log'\n";
+			$text3  = "ColorScheme = 'default'\n";
+			$text4  = "Format = 'mIRC'\n";
+			$text5  = "Lang = '".substr($a[1], 0, -1)."'\n";
+			$text6  = "DailyActivity = '31'\n";	
+			$text7  = "Network= 'OnlineGamesNet'\n";
+			$text8  = "Maintainer = '".$botnick."'\n";
+			$text9  = "OutputFile = '".$statsdir.substr($a[0], 1).".php'\n";
+			$text10 = "</channel>\n";
+			$dateiname = $cfgdir.substr($a[0], 1).".cfg"; 
+			$handler = fOpen($dateiname , "a+");
+			fWrite($handler , $text1);
+			fWrite($handler , $text2);
+			fWrite($handler , $text3);
+			fWrite($handler , $text4);
+			fWrite($handler , $text5);
+			fWrite($handler , $text6);
+			fWrite($handler , $text7);
+			fWrite($handler , $text8);
+			fWrite($handler , $text9);
+			fWrite($handler , $text10);
+			fClose($handler);
+		}
 	}
 }
 
@@ -270,6 +299,7 @@ function del_chan ($channel) {
 	$fp = fopen($botdir."channel.cfg","w+");
 	fwrite($fp, $myfilenew);
 	fclose($fp);
+	putSocket("part ".$channel);
 }
 
 function check_stats () {

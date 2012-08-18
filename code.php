@@ -67,9 +67,8 @@ if ($exp[1] == "354") {
 							if($exp[4]){
 								$inhalt = file_get_contents($botdir."noreg.cfg");	
 								if ( stristr($inhalt, $exp[4]) == true ) {
-									notice($nick,"Der Channel: ".$exp[4]." steht auf der not register liste.");
+									notice($nick,"Der Channel: ".$exp[4]." steht auf der nicht registrieren liste.");
 								} else {						
-									putSocket("join ".$exp[4]);
 									create_chan($exp[4]);
 								}
 							}else{
@@ -101,7 +100,6 @@ if ($exp[1] == "354") {
 							require_once("Table.class.php");
 							$datei = $botdir."channel.cfg";
 							$array = file($datei);
-							#print_r($array);
 							$table = new Table(2);
 							$table->add("Name", "Lang");
 							foreach ($array as $element) {
@@ -142,7 +140,6 @@ if ($exp[1] == "354") {
 				if ( stristr($inhalt1, $chan) == true ) {
 					putSocket("join ".$exp[3]);
 				}else{
-					putSocket("join ".$exp[3]);
 					create_chan($exp[3]);
 				}
 			}
@@ -184,7 +181,6 @@ if ($exp[1] == "354") {
 		}
 		if ($exp[1] == "KICK") {
 			if($exp[3] == $botnick OR $exp[3] == $botnick."|ZNC") {
-				putSocket("part ".$exp[2]);
 				del_chan($exp[2]);
 			}else{
 				$cha = @substr($exp[2], 1);
