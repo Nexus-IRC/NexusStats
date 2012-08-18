@@ -1,22 +1,3 @@
-if ($exp[1] == "354") {
-			if ($exp[3] == "1") {
-				$authre[strtolower($exp[4])] = $exp[5];
-			}
-		}
-		
-		if ($exp[1] == "315") {
-			$x = explode(",",$exp[3]);
-			$target = $x[0];
-			$id = $x[1];
-			if ($id == 1) {
-				if(!$authre[strtolower($target)]){
-					$auth = false;
-				} else {
-					$auth = $authre[strtolower($target)];
-				}
-			}
-		}
-		
         if ($exp[1] == "PRIVMSG") {
 			$cha = @substr($exp[2], 1);
 			$kk = explode(":",$fg,3);
@@ -100,11 +81,13 @@ if ($exp[1] == "354") {
 							require_once("Table.class.php");
 							$datei = $botdir."channel.cfg";
 							$array = file($datei);
-							$table = new Table(2);
-							$table->add("Name", "Lang");
+							$table = new Table(3);
+							$table->add("Name", "Lang", "URL");
 							foreach ($array as $element) {
 								$a = explode("|",$element);
-								$table->add($a[0], $a[1]);
+								$b = @substr($a[0], 1);
+								$c = @substr($a[1], 0, -1);
+								$table->add($a[0], $c, $url.$b);
 							}
 							$lines = $table->end();
 							$i = -1;
