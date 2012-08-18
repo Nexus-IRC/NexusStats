@@ -22,19 +22,21 @@ echo("#### version 1.8-public   ####\n");
 echo("#### coded by Stricted    ####\n");
 echo("##############################\n");
 /* config start */
-$server 	= "localhost";
-$port 		= "8001";
-$botnick 	= "NexusStats";
-$pass 		= "NexusStats:xxxx";
-$admin 		= "Stricted2.user.OnlineGamesNet";
-$logdir 	= "/home/stats/pisg-0.73/log/";
-$cfgdir		= "/home/stats/pisg-0.73/cfg/";
-$statsdir	= "/var/customers/webs/nexus/stats/chan/";
-$archivdir	= "/var/customers/webs/nexus/stats/archiv/";
-$pisgdir	= "/home/stats/pisg-0.73/";
-$botdir		= "/home/stats/";
-$url		= "http://stats.nexus-irc.de/?c=";
-$aurl		= "http://stats.nexus-irc.de/?ac=";
+$server 		= "localhost";
+$port 			= "8001";
+$botnick 		= "NexusStats";
+$pass 			= "NexusStats:xxxx";
+$admin 			= "Stricted2.user.OnlineGamesNet";
+$logdir 		= "/home/stats/pisg-0.73/log/";
+$cfgdir			= "/home/stats/pisg-0.73/cfg/";
+$statsdir		= "/var/customers/webs/nexus/stats/chan/";
+$archivdir		= "/var/customers/webs/nexus/stats/archiv/";
+$pisgdir		= "/home/stats/pisg-0.73/";
+$botdir			= "/home/stats/";
+$url			= "http://stats.nexus-irc.de/?c=";
+$aurl			= "http://stats.nexus-irc.de/?ac=";
+$defaultlang 	= "EN";
+$trigger		= "?";
 /* config end */
 set_time_limit(0);
 $socket = fsockopen($server,$port,$errstr,$errno,2);
@@ -101,7 +103,7 @@ function create_timer ($time, $line) {
 }
 
 function create_log ($channel, $data) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	$inhalt1 = file_get_contents($botdir."noreg.cfg");	
 	if ( stristr($inhalt1, $channel) == true ) {
 	}else{
@@ -123,14 +125,14 @@ function create_noreg ($channel, $nick) {
 }
 
 function create_chan ($channel) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	$cha = @substr($channel, 1);
 	@unlink($cfgdir.$cha.".cfg");
 	$text1  = "<channel='".$channel."'>\n";
 	$text2  = "Logfile = '".$logdir.$cha.".log'\n";
 	$text3  = "ColorScheme = 'default'\n";
 	$text4  = "Format = 'mIRC'\n";
-	$text5  = "Lang = 'EN'\n";
+	$text5  = "Lang = '".$defaultlang."'\n";
 	$text6  = "DailyActivity = '31'\n";	
 	$text7  = "Network= 'OnlineGamesNet'\n";
 	$text8  = "Maintainer = '".$botnick."'\n";
@@ -150,11 +152,11 @@ function create_chan ($channel) {
 	fWrite($handler , $text10);
 	fClose($handler);
 	$inhalt = file_get_contents($botdir."channel.cfg");
-	file_put_contents($botdir."channel.cfg", $inhalt .= $channel."|EN\n");
+	file_put_contents($botdir."channel.cfg", $inhalt .= $channel."|".$defaultlang."\n");
 }
 
 function set_lang ($chan, $lang) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	$cha = @substr($chan, 1);
 	if (file_exists($cfgdir.$cha.".cfg")) {
 		@unlink($cfgdir.$cha.".cfg");
@@ -209,7 +211,7 @@ function set_lang ($chan, $lang) {
 }
 
 function create_conf () {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	$datei = $botdir."channel.cfg";
 	$array = file($datei);
 	foreach ($array as $element) {
@@ -242,7 +244,7 @@ function create_conf () {
 }
 
 function del_chan ($channel) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	$myfilenew = NULL;
 	$cha = @substr($channel, 1);
 	@unlink($cfgdir.$cha.".cfg");
@@ -281,7 +283,7 @@ function check_stats () {
 }
 
 function create_stats ($chan = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	if(isset($chan)){ //optional
 		$cha = @substr($chan, 1);
 		@unlink($statsdir.$cha.".php");
@@ -300,7 +302,7 @@ function create_stats ($chan = null) {
 }
 
 function reset_stats ($chan = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	if(isset($chan)){ //optional
 		@unlink($logdir.substr($chan, 1).".log");
 		@unlink($archivdir.substr($chan, 1).".php");

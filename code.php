@@ -48,7 +48,7 @@ if ($exp[1] == "354") {
             } else 
             {
                 switch($command) {
-                    case "?stats":				
+                    case $trigger."stats":				
 						create_stats($exp[2]);
                         break;
 					case "?unreg":
@@ -62,7 +62,7 @@ if ($exp[1] == "354") {
 							break;
 						}
 						break;
-					case "?reg":
+					case $trigger."reg":
 						if($host[1] == $admin){
 							if($exp[4]){
 								$inhalt = file_get_contents($botdir."noreg.cfg");	
@@ -79,11 +79,13 @@ if ($exp[1] == "354") {
 							break;
 						}
 						break;					
-					case "?setlang":
+					case $trigger."setlang":
 						if($host[1] == $admin){
-							if($exp[4]){
-								if($exp[5]){
+							if(isset($exp[4])){
+								if(isset($exp[5])){
 									set_lang($exp[4],$exp[5]);
+								}elseif($exp[5] == "*"){
+									set_lang($exp[4],$defaultlang);
 								}else{
 									notice($nick,"Du musst einen Ländercode angeben");
 								}	
@@ -94,7 +96,7 @@ if ($exp[1] == "354") {
 							break;
 						}
 						break;
-					case "?clist":
+					case $trigger."clist":
 						if($host[1] == $admin){
 							require_once("Table.class.php");
 							$datei = $botdir."channel.cfg";
@@ -117,7 +119,7 @@ if ($exp[1] == "354") {
 							break;
 						}
 						break;
-					case "?debug":
+					case $trigger."debug":
 						if($host[1] == $admin){
 							debug($exp[2]);						
 						}else{
