@@ -89,8 +89,9 @@ function create_timer ($time, $line) {
 
 function create_log ($channel, $data) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
-	$inhalt1 = file_get_contents($botdir."noreg.cfg");	
-	if ( stristr($inhalt1, $channel) == true ) {
+	$datei = $botdir."noreg.cfg";
+	$array = file($datei);
+	if(in_array($chan, $array)){
 	}else{
 		$inhalt2 = file_get_contents($botdir."channel.cfg");	
 		if ( stristr($inhalt2, $channel) == true ) {
@@ -100,7 +101,7 @@ function create_log ($channel, $data) {
 		}
 	}
 }
-
+ 
 function create_noreg ($channel, $nick) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
 	$inhalt = file_get_contents($botdir."noreg.cfg");
