@@ -139,7 +139,7 @@ function set_lang ($chan, $lang = null) {
 			$text2  = "Logfile = '".$logdir.$cha.".log'\n";
 			$text3  = "ColorScheme = 'default'\n";
 			$text4  = "Format = 'mIRC'\n";
-			$text5  = "Lang = '".$$defaultlang."'\n";
+			$text5  = "Lang = '".$defaultlang."'\n";
 			$text6  = "DailyActivity = '31'\n";	
 			$text7  = "Network= 'OnlineGamesNet'\n";
 			$text8  = "Maintainer = '".$botnick."'\n";
@@ -328,7 +328,7 @@ function reset_stats ($chan = null) {
 			copy($statsdir.substr($a[0], 1).".php", $archivdir.substr($a[0], 1).".php");
 			@unlink($statsdir.substr($a[0], 1).".php");
 			privmsg($a[0],"Stats Reset, Archiv: ".$aurl.substr($a[0], 1));
-			create_log(substr($a[0], 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: "$aurl.substr($a[0], 1));
+			create_log(substr($a[0], 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.substr($a[0], 1));
 		}
 		create_stats ();
 		create_timer("24h","stats");
