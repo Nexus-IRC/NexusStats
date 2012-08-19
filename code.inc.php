@@ -125,6 +125,17 @@ if ($exp[1] == "PRIVMSG") {
 					break;
 				}
 				break;
+			case $trigger."resetstats":
+				if($host[1] == $admin){
+					if(isset($exp[4])){
+						reset_stats($exp[4]);
+					}else{
+						reset_stats();
+					}
+				}else{
+					break;
+				}
+				break;
 			case $trigger."version":
 				notice($nick, "NexusStats v1.9, written by Stricted");
 				notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git;a=summary");
