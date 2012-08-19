@@ -64,8 +64,9 @@ if ($exp[1] == "PRIVMSG") {
 			case $trigger."reg":
 				if($host[1] == $admin){
 					if($exp[4]){
-						$inhalt = file_get_contents($botdir."noreg.cfg");	
-						if ( stristr($inhalt, $exp[4]) == true ) {
+						$datei = $botdir."noreg.cfg";
+						$array = file($datei);
+						if(in_array($chan, $array)){
 							notice($nick,"Der Channel: ".$exp[4]." steht auf der nicht registrieren liste.");
 						} else {						
 							create_chan($exp[4]);
@@ -151,10 +152,11 @@ if ($exp[1] == "INVITE") {
 	}else{
 		$chan = $exp[3];
 	}
-	$inhalt = file_get_contents($botdir."noreg.cfg");	
-	if ( stristr($inhalt, $chan) == true ) {
+	$datei = $botdir."noreg.cfg";	
+	$array = file($datei);
+	if(in_array($chan, $array)){
 	} else {
-		$inhalt1 = file_get_contents($botdir."channel.cfg");	
+		$datei1 = file_get_contents($botdir."channel.cfg");	
 		if ( stristr($inhalt1, $chan) == true ) {
 			putSocket("join ".$exp[3]);
 		}else{
