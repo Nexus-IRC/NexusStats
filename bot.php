@@ -584,9 +584,13 @@ function time2str ($line) {
 	return($str);
 }
 
-function send_debug ($data){
+function send_debug ($data, $channel = null){
 	global $debugchannel;
-	privmsg($debugchannel, "[Debug] ".$data);
+	if(isset($channel)){
+		privmsg($channel, "[Debug] ".$data);
+	}else{
+		privmsg($debugchannel, "[Debug] ".$data);
+	}
 }
 
 function putSocket ($line) {
