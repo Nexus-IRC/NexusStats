@@ -75,7 +75,7 @@ while (true) {
             #putSocket("JOIN #nexus"); //debug code
 			create_timer("12h","stats");
         }
-		eval(file_get_contents("code.php"));
+		include("code.inc.php");
 		
     }
 }
