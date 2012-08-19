@@ -18,7 +18,7 @@
 ***********************************************************************/
 echo("##############################\n");
 echo("#### Starting NexusStats  ####\n");
-echo("#### version 1.8-public   ####\n");
+echo("#### version 1.9-public   ####\n");
 echo("#### coded by Stricted    ####\n");
 echo("##############################\n");
 /* config start */
