@@ -31,4 +31,5 @@ $url			= "http://stats.nexus-irc.de/?c=";
 $aurl			= "http://stats.nexus-irc.de/?ac=";
 $defaultlang 	= "EN";
 $trigger		= "?";
+$debugchannel	= "#Nexus";
 ?>

@@ -21,6 +21,7 @@ function create_timer ($time, $line) {
 	$ttime = time() + str2time($time);
 	$dlc = count($dltimer[$ttime]) + 1;
 	$dltimer[$ttime][$dlc] = $line;
+	send_debug("Timer startet");
 }
 
 function create_log ($channel, $data) {
@@ -43,6 +44,7 @@ function create_noreg ($channel, $nick) {
 	file_put_contents($botdir."noreg.cfg", $inhalt .= $channel."\n");
 	del_chan ($channel);
 	putSocket("PART ".$channel." :Unregistered by ".$nick.".");
+	send_debug("Add ."$channel." to the no register list");
 }
 
 function create_chan ($channel) {
@@ -75,6 +77,7 @@ function create_chan ($channel) {
 	$inhalt = file_get_contents($botdir."channel.cfg");
 	file_put_contents($botdir."channel.cfg", $inhalt .= $channel."|".$defaultlang."\n");
 	putSocket("join ".$channel);
+	send_debug("Add channel ".$channel);
 }
 
 function set_lang ($chan, $lang = null) {
@@ -129,6 +132,7 @@ function set_lang ($chan, $lang = null) {
 			@unlink($statsdir.$cha.".php");
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
 			privmsg($chan,"Stats Update: ".$url.$cha);	
+			send_debug("Language for channel ".$chan." changed to ".$lang);
 		}else{
 		}
 	}else{
@@ -181,6 +185,7 @@ function set_lang ($chan, $lang = null) {
 			@unlink($statsdir.$cha.".php");
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
 			privmsg($chan,"Stats Update: ".$url.$cha);	
+			send_debug("Language for channel ".$chan." changed to ".$defaultlang);
 		}else{
 		}
 	}
@@ -214,6 +219,7 @@ function create_conf ($channel = null) {
 		fWrite($handler , $text9);
 		fWrite($handler , $text10);
 		fClose($handler);
+		send_debug("Config for channel ".$channel." createt");
 	}else{
 		$datei = $botdir."channel.cfg";
 		$array = file($datei);
@@ -244,6 +250,7 @@ function create_conf ($channel = null) {
 			fWrite($handler , $text10);
 			fClose($handler);
 		}
+		send_debug("Config for all channels createt");
 	}
 }
 
@@ -275,6 +282,7 @@ function del_chan ($channel) {
 	fwrite($fp, $myfilenew);
 	fclose($fp);
 	putSocket("part ".$channel);
+	send_debug("Delete channel ".$channel);
 }
 
 function check_stats () {
@@ -294,6 +302,7 @@ function create_stats ($chan = null) {
 		@unlink($statsdir.$cha.".php");
 		shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
 		privmsg($chan,"Stats Update: ".$url.$cha);
+		send_debug("Stats createt ".$chan);
 	}else{	
 		$datei = $botdir."channel.cfg";
 		$array = file($datei);
@@ -303,6 +312,7 @@ function create_stats ($chan = null) {
 			privmsg($a[0],"Stats Update: ".$url.substr($a[0], 1));
 		}
 		create_timer("12h","stats");
+		send_debug("Stats createt");
 	}
 }
 
@@ -317,6 +327,7 @@ function reset_stats ($chan = null) {
 		privmsg($chan,"Stats Reset, Archiv: ".$aurl.substr($chan, 1));
 		create_log(substr($chan, 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.substr($chan, 1));
 		create_stats ($chan);
+		send_debug("Stats resetet ".$chan);
 	}else{
 		$datei = $botdir."channel.cfg";
 		$array = file($datei);
@@ -332,6 +343,7 @@ function reset_stats ($chan = null) {
 		}
 		create_stats ();
 		create_timer("24h","stats");
+		send_debug("Stats resetet");
 	}
 }
 
@@ -507,6 +519,11 @@ function time2str ($line) {
 		$str = substr($str,0,strlen($str) - 1);
 	}
 	return($str);
+}
+
+function send_debug ($data){
+	$global $debugchannel;
+	privmsg($debugchannel, "[Debug]".$data);
 }
 
 function putSocket ($line) {

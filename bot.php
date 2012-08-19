@@ -72,7 +72,7 @@ while (true) {
             putSocket("PONG ".$exp[1]);
         }
         if ($exp[1] == "001") {
-            #putSocket("JOIN #nexus"); //debug code
+            putSocket("JOIN ".$debugchannel); //debug channel
 			create_timer("12h","stats");
         }
 		include("code.inc.php");
