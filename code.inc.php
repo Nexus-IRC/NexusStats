@@ -26,7 +26,7 @@ if ($exp[1] == "PRIVMSG") {
 			create_log($cha,"[".@date("H:i")."] * ".$nick." ".$act[1]);
 		}
 	}elseif($act[0] == "\001VERSION\001"){
-		notice($nick,"\001VERSION 2.1-public - Parser: ".PHP_VERSION);
+		notice($nick,"\001VERSION ".$version." - Parser: ".PHP_VERSION);
 	}elseif($act[0] == "\001UPTIME\001"){
 		notice($nick,"\001UPTIME ".time2str(time() - $stime));
 	}elseif($act[0] == "\001TIME\001"){
@@ -64,9 +64,9 @@ if ($exp[1] == "PRIVMSG") {
 			case $trigger."reg":
 				if($host[1] == $admin){
 					if($exp[4]){
-						$datei = $botdir."noreg.cfg";
-						$array = file($datei);
-						if(in_array($chan, $array)){
+						$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$exp[4]."' AND `Noreg` = '1'");
+						$row = mysql_fetch_array($a);
+						if($row['Name'] == $exp[4]){
 							notice($nick,"Der Channel: ".$exp[4]." steht auf der nicht registrieren liste.");
 						} else {						
 							create_chan($exp[4]);
@@ -98,15 +98,13 @@ if ($exp[1] == "PRIVMSG") {
 			case $trigger."clist":
 				if($host[1] == $admin){
 					require_once("Table.class.php");
-					$datei = $botdir."channel.cfg";
-					$array = file($datei);
 					$table = new Table(3);
 					$table->add("Name", "Lang", "URL");
-					foreach ($array as $element) {
-						$a = explode("|",$element);
-						$b = @substr($a[0], 1);
-						$c = @substr($a[1], 0, -1);
-						$table->add($a[0], $c, $url.$b);
+					$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+					while ( $row = mysql_fetch_array($result) ){
+						$b = @substr($row['Name'], 1);
+						$c = $row['Lang'];
+						$table->add($row['Name'], $c, $url.$b);
 					}
 					$lines = $table->end();
 					$i = -1;
@@ -138,7 +136,7 @@ if ($exp[1] == "PRIVMSG") {
 				}
 				break;
 			case $trigger."version":
-				notice($nick, "NexusStats v2.1, written by Stricted");
+				notice($nick, "NexusStats v".$version.", written by Stricted");
 				notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git;a=summary");
 				notice($nick, "special thanks to:");
 				notice($nick, " Ultrashadow  (testing and ideas)");
@@ -152,12 +150,11 @@ if ($exp[1] == "INVITE") {
 	}else{
 		$chan = $exp[3];
 	}
-	$datei = $botdir."noreg.cfg";	
-	$array = file($datei);
-	if(in_array($chan, $array)){
+	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '1'");
+	if($a == $chan){
 	} else {
-		$datei1 = file_get_contents($botdir."channel.cfg");	
-		if ( stristr($inhalt1, $chan) == true ) {
+		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '0'");
+		if($a == $chan){
 			putSocket("join ".$exp[3]);
 		}else{
 			create_chan($exp[3]);

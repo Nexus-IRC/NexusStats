@@ -26,11 +26,15 @@ $cfgdir			= "/home/stats/pisg-0.73/cfg/";
 $statsdir		= "/var/customers/webs/nexus/stats/chan/";
 $archivdir		= "/var/customers/webs/nexus/stats/archiv/";
 $pisgdir		= "/home/stats/pisg-0.73/";
-$botdir			= "/home/stats/";
 $url			= "http://stats.nexus-irc.de/?c=";
 $aurl			= "http://stats.nexus-irc.de/?ac=";
 $defaultlang 	= "EN";
 $trigger		= "?";
 $debugchannel	= "#Nexus";
 $debuglog		= "/home/stats/debug.log";
+$version		= "2.1-public";
+$mysql_host		= "localhost";
+$mysql_user		= "user";
+$mysql_pw		= "pw";
+$mysql_db		= "db";
 ?>

@@ -16,14 +16,14 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>. *
 *                                                                      *
 ***********************************************************************/
-echo("##############################\n");
-echo("#### Starting NexusStats  ####\n");
-echo("#### version 2.1-public   ####\n");
-echo("#### coded by Stricted    ####\n");
-echo("##############################\n");
 /* config start */
 require_once("config.inc.php");
 /* config end */
+echo("################################\n");
+echo("#### Starting NexusStats        \n");
+echo("#### version ".$version."       \n");
+echo("#### coded by Stricted          \n");
+echo("################################\n");
 set_time_limit(0);
 $socket = fsockopen($server,$port,$errstr,$errno,2);
 $dltimer = array();
@@ -72,6 +72,10 @@ while (true) {
             putSocket("PONG ".$exp[1]);
         }
         if ($exp[1] == "001") {
+			$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+			while ( $row = mysql_fetch_array($result) ){
+				putSocket("JOIN ".$row['Name']); //debug channel
+			}
             putSocket("JOIN ".$debugchannel); //debug channel
 			create_timer("12h","stats");
         }
@@ -88,13 +92,14 @@ function create_timer ($time, $line) {
 }
 
 function create_log ($channel, $data) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
-	$datei = $botdir."noreg.cfg";
-	$array = file($datei);
-	if(in_array($chan, $array)){
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
+	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '1'");
+	$row = mysql_fetch_array($a);
+	if($row['Name'] == $channel){
 	}else{
-		$inhalt2 = file_get_contents($botdir."channel.cfg");	
-		if ( stristr($inhalt2, $channel) == true ) {
+		$b = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
+		$row2 = mysql_fetch_array($b);
+		if($row2['Name'] == $channel){
 			$inhalt = file_get_contents($logdir.$channel.".log");
 			file_put_contents($logdir.$channel.".log", $inhalt .= $data."\n");
 		}else{ 
@@ -103,18 +108,18 @@ function create_log ($channel, $data) {
 }
 
 function create_debug_log ($data) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang, $debuglog;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $debuglog;
 	$datei = $debuglog;
 	$inhalt = file_get_contents($datei);
 	file_put_contents($datei, $inhalt .= date("d.m.y")." ".date("H:i:s").": ".$data."\n");
 }
  
 function create_noreg ($channel, $nick) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
-	$inhalt2 = file_get_contents($botdir."channel.cfg");	
-	if ( stristr($inhalt2, $channel) == true ) {
-		$inhalt = file_get_contents($botdir."noreg.cfg");
-		file_put_contents($botdir."noreg.cfg", $inhalt .= $channel."\n");
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl;
+	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
+	$row = mysql_fetch_array($a);
+	if($row['Name'] == $channel){
+		mysql_send_query("UPDATE `Channel` SET `Noreg` = '1' WHERE `Name` = '".$channel."'");
 		del_chan ($channel);
 		putSocket("PART ".$channel." :Unregistered by ".$nick.".");
 		send_debug("Add ".$channel." to the no register list");
@@ -122,41 +127,21 @@ function create_noreg ($channel, $nick) {
 }
 
 function create_chan ($channel) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 	$cha = @substr($channel, 1);
 	create_conf($channel);
-	$inhalt = file_get_contents($botdir."channel.cfg");
-	file_put_contents($botdir."channel.cfg", $inhalt .= $channel."|".$defaultlang."\n");
+	mysql_send_query("INSERT INTO `NexusStats`.`Channel` (`ID` ,`Name` ,`Lang` ,`Noreg` ) VALUES (NULL , '".$channel."', '".$defaultlang."', '0');");
 	putSocket("join ".$channel);
 	send_debug("Add channel ".$channel);
 }
 
 function set_lang ($chan, $lang = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 	if(isset($lang)){	
 		$cha = @substr($chan, 1);
 		if (file_exists($cfgdir.$cha.".cfg")) {
 			create_conf($chan, $lang);
-			$myfile = file_get_contents($botdir."channel.cfg");
-			$myexp  = explode("\n", $myfile);
-			$i = 0;
-			while (@($myexp[$i])) {
-				$a= explode("|",$myexp[$i]);
-				if ($a[0] == $chan) {
-				} else {
-					if ($myfilenew == "") {
-						$myfilenew = $a[0]."|".$a[1]."\n";
-					} else {
-						$myfilenew = $myfilenew.$a[0]."|".$a[1]."\n";
-					}
-				}
-				$i++;
-			}
-			$fp = fopen($botdir."channel.cfg","w+");
-			fwrite($fp, $myfilenew);
-			fclose($fp);
-			$inhalt = file_get_contents($botdir."channel.cfg");
-			file_put_contents($botdir."channel.cfg", $inhalt .= $chan."|".$lang."\n");
+			mysql_send_query("UPDATE `Channel` SET `Lang` = '".$lang."' WHERE `Name` = '".$chan."'");
 			@unlink($statsdir.$cha.".php");
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
 			privmsg($chan,"Stats Update: ".$url.$cha);	
@@ -166,26 +151,7 @@ function set_lang ($chan, $lang = null) {
 		$cha = @substr($chan, 1);
 		if (file_exists($cfgdir.$cha.".cfg")) {
 			create_conf ($chan);
-			$myfile = file_get_contents($botdir."channel.cfg");
-			$myexp  = explode("\n", $myfile);
-			$i = 0;
-			while (@($myexp[$i])) {
-				$a= explode("|",$myexp[$i]);
-				if ($a[0] == $chan) {
-				} else {
-					if ($myfilenew == "") {
-						$myfilenew = $a[0]."|".$a[1]."\n";
-					} else {
-						$myfilenew = $myfilenew.$a[0]."|".$a[1]."\n";
-					}
-				}
-				$i++;
-			}
-			$fp = fopen($botdir."channel.cfg","w+");
-			fwrite($fp, $myfilenew);
-			fclose($fp);
-			$inhalt = file_get_contents($botdir."channel.cfg");
-			file_put_contents($botdir."channel.cfg", $inhalt .= $chan."|".$defaultlang."\n");
+			mysql_send_query("UPDATE `Channel` SET `Lang` = '".$defaultlang."' WHERE `Name` = '".$chan."'");
 			@unlink($statsdir.$cha.".php");
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
 			privmsg($chan,"Stats Update: ".$url.$cha);	
@@ -196,10 +162,11 @@ function set_lang ($chan, $lang = null) {
 }
 
 function create_conf ($channel = null, $lang = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 	if(isset($channel)){//optional
-		$inhalt2 = file_get_contents($botdir."channel.cfg");	
-		if ( stristr($inhalt2, $channel) == true ) {
+		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
+		$row = mysql_fetch_array($a);
+		if($row['Name'] == $channel){
 			if(isset($lang)){//optional
 				$cha = @substr($channel, 1);
 				@unlink($cfgdir.$cha.".cfg");
@@ -257,22 +224,20 @@ function create_conf ($channel = null, $lang = null) {
 			}
 		}
 	}else{
-		$datei = $botdir."channel.cfg";
-		$array = file($datei);
-		foreach ($array as $element) {
-			$a=explode("|",$element);
-			@unlink($cfgdir.substr($a[0], 1).".cfg");
-			$text1  = "<channel='#".substr($a[0], 1)."'>\n";
-			$text2  = "Logfile = '".$logdir.substr($a[0], 1).".log'\n";
+		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+		while ( $row = mysql_fetch_array($result) ){
+			@unlink($cfgdir.substr($row['Name'], 1).".cfg");
+			$text1  = "<channel='#".substr($row['Name'], 1)."'>\n";
+			$text2  = "Logfile = '".$logdir.substr($row['Name'], 1).".log'\n";
 			$text3  = "ColorScheme = 'default'\n";
 			$text4  = "Format = 'mIRC'\n";
-			$text5  = "Lang = '".substr($a[1], 0, -1)."'\n";
+			$text5  = "Lang = '".$row['Lang']."'\n";
 			$text6  = "DailyActivity = '31'\n";	
 			$text7  = "Network= 'OnlineGamesNet'\n";
 			$text8  = "Maintainer = '".$botnick."'\n";
-			$text9  = "OutputFile = '".$statsdir.substr($a[0], 1).".php'\n";
+			$text9  = "OutputFile = '".$statsdir.substr($row['Name'], 1).".php'\n";
 			$text10 = "</channel>\n";
-			$dateiname = $cfgdir.substr($a[0], 1).".cfg"; 
+			$dateiname = $cfgdir.substr($row['Name'], 1).".cfg"; 
 			$handler = fOpen($dateiname , "a+");
 			fWrite($handler , $text1);
 			fWrite($handler , $text2);
@@ -291,34 +256,15 @@ function create_conf ($channel = null, $lang = null) {
 }
 
 function del_chan ($channel) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
-	$inhalt2 = file_get_contents($botdir."channel.cfg");	
-	if ( stristr($inhalt2, $channel) == true ) {
-		$myfilenew = NULL;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
+	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
+	$row = mysql_fetch_array($a);
+	if($row['Name'] == $channel){
 		$cha = @substr($channel, 1);
 		@unlink($cfgdir.$cha.".cfg");
 		@unlink($logdir.$cha.".log");
 		@unlink($statsdir.$cha.".php");
-
-		$myfile = file_get_contents($botdir."channel.cfg");
-		$myexp  = explode("\n", $myfile);
-		$i = 0;
-		while (@($myexp[$i])) {
-			$a= explode("|",$myexp[$i]);
-			$a= explode("|",$myexp[$i]);
-			if ($a[0] == $channel) {
-			} else {
-				if ($myfilenew == "") {
-					$myfilenew = $a[0]."|".$a[1]."\n";
-				} else {
-					$myfilenew = $myfilenew.$a[0]."|".$a[1]."\n";
-				}
-			}
-			$i++;
-		}
-		$fp = fopen($botdir."channel.cfg","w+");
-		fwrite($fp, $myfilenew);
-		fclose($fp);
+		mysql_send_query("DELETE FROM `Channel` WHERE `Name` = '".$channel."'");
 		putSocket("part ".$channel);
 		send_debug("Delete channel ".$channel);
 	}
@@ -335,10 +281,11 @@ function check_stats () {
 }
 
 function create_stats ($chan = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 	if(isset($chan)){ //optional
-		$inhalt2 = file_get_contents($botdir."channel.cfg");	
-		if ( stristr($inhalt2, $chan) == true ) {
+		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '0'");
+		$row = mysql_fetch_array($a);
+		if($row['Name'] == $chan){
 			$cha = @substr($chan, 1);
 			@unlink($statsdir.$cha.".php");
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
@@ -346,12 +293,10 @@ function create_stats ($chan = null) {
 			send_debug("Stats createt ".$chan);
 		}
 	}else{	
-		$datei = $botdir."channel.cfg";
-		$array = file($datei);
-		foreach ($array as $element) {
-			$a=explode("|",$element);
-			shell_exec($pisgdir."pisg --configfile=".$cfgdir.substr($a[0], 1).".cfg\n");
-			privmsg($a[0],"Stats Update: ".$url.substr($a[0], 1));
+		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+		while ( $row = mysql_fetch_array($result) ){
+			shell_exec($pisgdir."pisg --configfile=".$cfgdir.substr($row['Name'], 1).".cfg\n");
+			privmsg($row['Name'],"Stats Update: ".$url.substr($row['Name'], 1));
 		}
 		create_timer("12h","stats");
 		send_debug("Stats createt");
@@ -359,10 +304,11 @@ function create_stats ($chan = null) {
 }
 
 function reset_stats ($chan = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 	if(isset($chan)){ //optional
-		$inhalt2 = file_get_contents($botdir."channel.cfg");	
-		if ( stristr($inhalt2, $chan) == true ) {
+		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '0'");
+		$row = mysql_fetch_array($a);
+		if($row['Name'] == $chan){
 			@unlink($logdir.substr($chan, 1).".log");
 			@unlink($archivdir.substr($chan, 1).".php");
 			mkdir($archivdir, 0755);
@@ -374,18 +320,17 @@ function reset_stats ($chan = null) {
 			send_debug("Stats resetet ".$chan);
 		}
 	}else{
-		$datei = $botdir."channel.cfg";
-		$array = file($datei);
-		foreach ($array as $element) {
+		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+		while ( $row = mysql_fetch_array($result) ){
 			$a=explode("|",$element);
-			@unlink($logdir.substr($a[0], 1).".log");
-			@unlink($archivdir.substr($a[0], 1).".php");
+			@unlink($logdir.substr($row['Name'], 1).".log");
+			@unlink($archivdir.substr($row['Name'], 1).".php");
 			mkdir($archivdir, 0755);
-			copy($statsdir.substr($a[0], 1).".php", $archivdir.substr($a[0], 1).".php");
-			@unlink($statsdir.substr($a[0], 1).".php");
-			privmsg($a[0],"Stats Reset, Archiv: ".$aurl.substr($a[0], 1));
-			create_log(substr($a[0], 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.substr($a[0], 1));
-			create_stats($a[0]);
+			copy($statsdir.substr($row['Name'], 1).".php", $archivdir.substr($row['Name'], 1).".php");
+			@unlink($statsdir.substr($row['Name'], 1).".php");
+			privmsg($row['Name'],"Stats Reset, Archiv: ".$aurl.substr($row['Name'], 1));
+			create_log(substr($row['Name'], 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.substr($row['Name'], 1));
+			create_stats($row['Name']);
 		}
 		create_timer("24h","stats");
 		send_debug("Stats resetet");
@@ -575,6 +520,14 @@ function send_debug ($data, $channel = null){
 		privmsg($debugchannel, "[Debug] ".$data);
 		create_debug_log("[Debug] ".$data);
 	}
+}
+function mysql_send_query ($data) {
+	global $mysql_host, $mysql_user, $mysql_pw, $mysql_db;
+	$link = mysql_connect($mysql_host, $mysql_user, $mysql_pw);
+	$db = mysql_select_db($mysql_db, $link);
+	$return = mysql_query($data, $link) or die(mysql_error());
+	return $return;
+	mysql_close($link);
 }
 
 function putSocket ($line) {
