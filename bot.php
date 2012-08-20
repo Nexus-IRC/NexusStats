@@ -101,6 +101,13 @@ function create_log ($channel, $data) {
 		}
 	}
 }
+
+function create_debug_log ($data) {
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang, $debuglog;
+	$datei = $debuglog;
+	$inhalt = file_get_contents($datei);
+	file_put_contents($datei, $inhalt .= date("d.m.y")." ".date("H:i:s").": ".$data."\n");
+}
  
 function create_noreg ($channel, $nick) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
@@ -563,8 +570,10 @@ function send_debug ($data, $channel = null){
 	global $debugchannel;
 	if(isset($channel)){
 		privmsg($channel, "[Debug] ".$data);
+		create_debug_log("[Debug] ".$data);
 	}else{
 		privmsg($debugchannel, "[Debug] ".$data);
+		create_debug_log("[Debug] ".$data);
 	}
 }
 
