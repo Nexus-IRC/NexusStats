@@ -385,8 +385,8 @@ function reset_stats ($chan = null) {
 			@unlink($statsdir.substr($a[0], 1).".php");
 			privmsg($a[0],"Stats Reset, Archiv: ".$aurl.substr($a[0], 1));
 			create_log(substr($a[0], 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.substr($a[0], 1));
+			create_stats($a[0]);
 		}
-		create_stats ();
 		create_timer("24h","stats");
 		send_debug("Stats resetet");
 	}
