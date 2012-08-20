@@ -26,7 +26,7 @@ if ($exp[1] == "PRIVMSG") {
 			create_log($cha,"[".@date("H:i")."] * ".$nick." ".$act[1]);
 		}
 	}elseif($act[0] == "\001VERSION\001"){
-		notice($nick,"\001VERSION 2.0-public - Parser: ".PHP_VERSION);
+		notice($nick,"\001VERSION 2.1-public - Parser: ".PHP_VERSION);
 	}elseif($act[0] == "\001UPTIME\001"){
 		notice($nick,"\001UPTIME ".time2str(time() - $stime));
 	}elseif($act[0] == "\001TIME\001"){
@@ -138,7 +138,7 @@ if ($exp[1] == "PRIVMSG") {
 				}
 				break;
 			case $trigger."version":
-				notice($nick, "NexusStats v2.0, written by Stricted");
+				notice($nick, "NexusStats v2.1, written by Stricted");
 				notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git;a=summary");
 				notice($nick, "special thanks to:");
 				notice($nick, " Ultrashadow  (testing and ideas)");
