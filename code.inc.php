@@ -50,7 +50,7 @@ if ($exp[1] == "PRIVMSG") {
 			case $trigger."stats":				
 				create_stats($exp[2]);
 				break;
-			case "?unreg":
+			case $trigger."unreg":
 				if($host[1] == $admin){
 					if($exp[4]){
 						create_noreg($exp[4],$nick);
