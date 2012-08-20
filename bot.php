@@ -130,7 +130,7 @@ function create_chan ($channel) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 	$cha = @substr($channel, 1);
 	create_conf($channel);
-	mysql_send_query("INSERT INTO `NexusStats`.`Channel` (`ID` ,`Name` ,`Lang` ,`Noreg` ) VALUES (NULL , '".$channel."', '".$defaultlang."', '0');");
+	mysql_send_query("INSERT INTO `Channel` (`ID` ,`Name` ,`Lang` ,`Noreg` ) VALUES (NULL , '".$channel."', '".$defaultlang."', '0');");
 	putSocket("join ".$channel);
 	send_debug("Add channel ".$channel);
 }
