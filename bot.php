@@ -104,11 +104,14 @@ function create_log ($channel, $data) {
  
 function create_noreg ($channel, $nick) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl;
-	$inhalt = file_get_contents($botdir."noreg.cfg");
-	file_put_contents($botdir."noreg.cfg", $inhalt .= $channel."\n");
-	del_chan ($channel);
-	putSocket("PART ".$channel." :Unregistered by ".$nick.".");
-	send_debug("Add ".$channel." to the no register list");
+	$inhalt2 = file_get_contents($botdir."channel.cfg");	
+	if ( stristr($inhalt2, $channel) == true ) {
+		$inhalt = file_get_contents($botdir."noreg.cfg");
+		file_put_contents($botdir."noreg.cfg", $inhalt .= $channel."\n");
+		del_chan ($channel);
+		putSocket("PART ".$channel." :Unregistered by ".$nick.".");
+		send_debug("Add ".$channel." to the no register list");
+	}
 }
 
 function create_chan ($channel) {
@@ -151,7 +154,6 @@ function set_lang ($chan, $lang = null) {
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
 			privmsg($chan,"Stats Update: ".$url.$cha);	
 			send_debug("Language for channel ".$chan." changed to ".$lang);
-		}else{
 		}
 	}else{
 		$cha = @substr($chan, 1);
@@ -189,60 +191,63 @@ function set_lang ($chan, $lang = null) {
 function create_conf ($channel = null, $lang = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	if(isset($channel)){//optional
-		if(isset($lang)){//optional
-			$cha = @substr($channel, 1);
-			@unlink($cfgdir.$cha.".cfg");
-			$text1  = "<channel='".$channel."'>\n";
-			$text2  = "Logfile = '".$logdir.$cha.".log'\n";
-			$text3  = "ColorScheme = 'default'\n";
-			$text4  = "Format = 'mIRC'\n";
-			$text5  = "Lang = '".$lang."'\n";
-			$text6  = "DailyActivity = '31'\n";	
-			$text7  = "Network= 'OnlineGamesNet'\n";
-			$text8  = "Maintainer = '".$botnick."'\n";
-			$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
-			$text10 = "</channel>\n";
-			$dateiname = $cfgdir.$cha.".cfg"; 
-			$handler = fOpen($dateiname , "a+");
-			fWrite($handler , $text1);
-			fWrite($handler , $text2);
-			fWrite($handler , $text3);
-			fWrite($handler , $text4);
-			fWrite($handler , $text5);
-			fWrite($handler , $text6);
-			fWrite($handler , $text7);
-			fWrite($handler , $text8);
-			fWrite($handler , $text9);
-			fWrite($handler , $text10);
-			fClose($handler);
-			send_debug("Config for channel ".$channel." createt");
-		}else{
-			$cha = @substr($channel, 1);
-			@unlink($cfgdir.$cha.".cfg");
-			$text1  = "<channel='".$channel."'>\n";
-			$text2  = "Logfile = '".$logdir.$cha.".log'\n";
-			$text3  = "ColorScheme = 'default'\n";
-			$text4  = "Format = 'mIRC'\n";
-			$text5  = "Lang = 'EN'\n";
-			$text6  = "DailyActivity = '31'\n";	
-			$text7  = "Network= 'OnlineGamesNet'\n";
-			$text8  = "Maintainer = '".$botnick."'\n";
-			$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
-			$text10 = "</channel>\n";
-			$dateiname = $cfgdir.$cha.".cfg"; 
-			$handler = fOpen($dateiname , "a+");
-			fWrite($handler , $text1);
-			fWrite($handler , $text2);
-			fWrite($handler , $text3);
-			fWrite($handler , $text4);
-			fWrite($handler , $text5);
-			fWrite($handler , $text6);
-			fWrite($handler , $text7);
-			fWrite($handler , $text8);
-			fWrite($handler , $text9);
-			fWrite($handler , $text10);
-			fClose($handler);
-			send_debug("Config for channel ".$channel." createt");
+		$inhalt2 = file_get_contents($botdir."channel.cfg");	
+		if ( stristr($inhalt2, $channel) == true ) {
+			if(isset($lang)){//optional
+				$cha = @substr($channel, 1);
+				@unlink($cfgdir.$cha.".cfg");
+				$text1  = "<channel='".$channel."'>\n";
+				$text2  = "Logfile = '".$logdir.$cha.".log'\n";
+				$text3  = "ColorScheme = 'default'\n";
+				$text4  = "Format = 'mIRC'\n";
+				$text5  = "Lang = '".$lang."'\n";
+				$text6  = "DailyActivity = '31'\n";	
+				$text7  = "Network= 'OnlineGamesNet'\n";
+				$text8  = "Maintainer = '".$botnick."'\n";
+				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
+				$text10 = "</channel>\n";
+				$dateiname = $cfgdir.$cha.".cfg"; 
+				$handler = fOpen($dateiname , "a+");
+				fWrite($handler , $text1);
+				fWrite($handler , $text2);
+				fWrite($handler , $text3);
+				fWrite($handler , $text4);
+				fWrite($handler , $text5);
+				fWrite($handler , $text6);
+				fWrite($handler , $text7);
+				fWrite($handler , $text8);
+				fWrite($handler , $text9);
+				fWrite($handler , $text10);
+				fClose($handler);
+				send_debug("Config for channel ".$channel." createt");
+			}else{
+				$cha = @substr($channel, 1);
+				@unlink($cfgdir.$cha.".cfg");
+				$text1  = "<channel='".$channel."'>\n";
+				$text2  = "Logfile = '".$logdir.$cha.".log'\n";
+				$text3  = "ColorScheme = 'default'\n";
+				$text4  = "Format = 'mIRC'\n";
+				$text5  = "Lang = 'EN'\n";
+				$text6  = "DailyActivity = '31'\n";	
+				$text7  = "Network= 'OnlineGamesNet'\n";
+				$text8  = "Maintainer = '".$botnick."'\n";
+				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
+				$text10 = "</channel>\n";
+				$dateiname = $cfgdir.$cha.".cfg"; 
+				$handler = fOpen($dateiname , "a+");
+				fWrite($handler , $text1);
+				fWrite($handler , $text2);
+				fWrite($handler , $text3);
+				fWrite($handler , $text4);
+				fWrite($handler , $text5);
+				fWrite($handler , $text6);
+				fWrite($handler , $text7);
+				fWrite($handler , $text8);
+				fWrite($handler , $text9);
+				fWrite($handler , $text10);
+				fClose($handler);
+				send_debug("Config for channel ".$channel." createt");
+			}
 		}
 	}else{
 		$datei = $botdir."channel.cfg";
@@ -280,33 +285,36 @@ function create_conf ($channel = null, $lang = null) {
 
 function del_chan ($channel) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
-	$myfilenew = NULL;
-	$cha = @substr($channel, 1);
-	@unlink($cfgdir.$cha.".cfg");
-	@unlink($logdir.$cha.".log");
-	@unlink($statsdir.$cha.".php");
+	$inhalt2 = file_get_contents($botdir."channel.cfg");	
+	if ( stristr($inhalt2, $channel) == true ) {
+		$myfilenew = NULL;
+		$cha = @substr($channel, 1);
+		@unlink($cfgdir.$cha.".cfg");
+		@unlink($logdir.$cha.".log");
+		@unlink($statsdir.$cha.".php");
 
-	$myfile = file_get_contents($botdir."channel.cfg");
-	$myexp  = explode("\n", $myfile);
-	$i = 0;
-	while (@($myexp[$i])) {
-		$a= explode("|",$myexp[$i]);
-		$a= explode("|",$myexp[$i]);
-		if ($a[0] == $channel) {
-		} else {
-			if ($myfilenew == "") {
-				$myfilenew = $a[0]."|".$a[1]."\n";
+		$myfile = file_get_contents($botdir."channel.cfg");
+		$myexp  = explode("\n", $myfile);
+		$i = 0;
+		while (@($myexp[$i])) {
+			$a= explode("|",$myexp[$i]);
+			$a= explode("|",$myexp[$i]);
+			if ($a[0] == $channel) {
 			} else {
-				$myfilenew = $myfilenew.$a[0]."|".$a[1]."\n";
+				if ($myfilenew == "") {
+					$myfilenew = $a[0]."|".$a[1]."\n";
+				} else {
+					$myfilenew = $myfilenew.$a[0]."|".$a[1]."\n";
+				}
 			}
+			$i++;
 		}
-		$i++;
+		$fp = fopen($botdir."channel.cfg","w+");
+		fwrite($fp, $myfilenew);
+		fclose($fp);
+		putSocket("part ".$channel);
+		send_debug("Delete channel ".$channel);
 	}
-	$fp = fopen($botdir."channel.cfg","w+");
-	fwrite($fp, $myfilenew);
-	fclose($fp);
-	putSocket("part ".$channel);
-	send_debug("Delete channel ".$channel);
 }
 
 function check_stats () {
@@ -322,11 +330,14 @@ function check_stats () {
 function create_stats ($chan = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	if(isset($chan)){ //optional
-		$cha = @substr($chan, 1);
-		@unlink($statsdir.$cha.".php");
-		shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
-		privmsg($chan,"Stats Update: ".$url.$cha);
-		send_debug("Stats createt ".$chan);
+		$inhalt2 = file_get_contents($botdir."channel.cfg");	
+		if ( stristr($inhalt2, $chan) == true ) {
+			$cha = @substr($chan, 1);
+			@unlink($statsdir.$cha.".php");
+			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
+			privmsg($chan,"Stats Update: ".$url.$cha);
+			send_debug("Stats createt ".$chan);
+		}
 	}else{	
 		$datei = $botdir."channel.cfg";
 		$array = file($datei);
@@ -343,15 +354,18 @@ function create_stats ($chan = null) {
 function reset_stats ($chan = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $botdir, $url, $aurl, $defaultlang;
 	if(isset($chan)){ //optional
-		@unlink($logdir.substr($chan, 1).".log");
-		@unlink($archivdir.substr($chan, 1).".php");
-		mkdir($archivdir, 0755);
-		copy($statsdir.substr($chan, 1).".php", $archivdir.substr($chan, 1).".php");
-		@unlink($statsdir.substr($chan, 1).".php");
-		privmsg($chan,"Stats Reset, Archiv: ".$aurl.substr($chan, 1));
-		create_log(substr($chan, 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.substr($chan, 1));
-		create_stats ($chan);
-		send_debug("Stats resetet ".$chan);
+		$inhalt2 = file_get_contents($botdir."channel.cfg");	
+		if ( stristr($inhalt2, $chan) == true ) {
+			@unlink($logdir.substr($chan, 1).".log");
+			@unlink($archivdir.substr($chan, 1).".php");
+			mkdir($archivdir, 0755);
+			copy($statsdir.substr($chan, 1).".php", $archivdir.substr($chan, 1).".php");
+			@unlink($statsdir.substr($chan, 1).".php");
+			privmsg($chan,"Stats Reset, Archiv: ".$aurl.substr($chan, 1));
+			create_log(substr($chan, 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.substr($chan, 1));
+			create_stats ($chan);
+			send_debug("Stats resetet ".$chan);
+		}
 	}else{
 		$datei = $botdir."channel.cfg";
 		$array = file($datei);
