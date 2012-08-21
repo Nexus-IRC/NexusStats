@@ -137,11 +137,11 @@ if ($exp[1] == "PRIVMSG") {
 				break;
 			case $trigger."version":
 				if($gitversion) {
-					notice($nick, "NexusStatsv".$version." (".$gitversion."), written by Stricted");
+					notice($nick, "NexusStats v".$version." (".$gitversion."), written by Stricted");
 				}else{
 					notice($nick, "NexusStats v".$version.", written by Stricted");
 				}
-				notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git;a=summary");
+				notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git");
 				notice($nick, "special thanks to:");
 				notice($nick, " Ultrashadow  (testing and ideas)");
 				if($gitversion) {
