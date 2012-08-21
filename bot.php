@@ -523,6 +523,17 @@ function send_debug ($data, $channel = null){
 		create_debug_log("[Debug] ".$data);
 	}
 }
+
+function check_version () {
+	global git-version;
+	if(defined("git-version")) {
+		$version = file_get_contents("http://git.nexus-irc.de/git_version.php?git=NexusStats.git");
+		if(git-version != $version) {
+			return "[UPDATE] There is an version update available on http://git.nexus-irc.de/?p=NexusStats.git";
+		}
+	}
+}
+
 function mysql_send_query ($data) {
 	global $mysql_host, $mysql_user, $mysql_pw, $mysql_db, $connect, $db;
 	if(!mysql_ping()) {

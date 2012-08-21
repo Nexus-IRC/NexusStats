@@ -1,5 +1,5 @@
-<?php
-/***********************************************************************
+ <?php
+ /***********************************************************************
 * Copyright (C) 2011  Jan Altensen (Stricted)                          *
 * email: info@webhostmax.de                                            *
 * This program is free software: you can redistribute it and/or modify *
@@ -16,26 +16,15 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>. *
 *                                                                      *
 ***********************************************************************/
-$server 		= "localhost";
-$port 			= "8001";
-$botnick 		= "NexusStats";
-$pass 			= "NexusStats:xxxx";
-$admin 			= "Stricted2.user.OnlineGamesNet";
-$logdir 		= "/home/stats/pisg-0.73/log/";
-$cfgdir			= "/home/stats/pisg-0.73/cfg/";
-$statsdir		= "/var/customers/webs/nexus/stats/chan/";
-$archivdir		= "/var/customers/webs/nexus/stats/archiv/";
-$pisgdir		= "/home/stats/pisg-0.73/";
-$url			= "http://stats.nexus-irc.de/?c=";
-$aurl			= "http://stats.nexus-irc.de/?ac=";
-$defaultlang 	= "EN";
-$trigger		= "?";
-$debugchannel	= "#Nexus";
-$debuglog		= "/home/stats/debug.log";
-$version		= "2.1-public";
-$mysql_host		= "localhost";
-$mysql_user		= "user";
-$mysql_pw		= "pw";
-$mysql_db		= "db";
-define("git-version","");
-?>
+
+// RUN THIS SCRIPT FIRST
+$git_revision = shell_exec('git log -n 1 --pretty="format:%h"');
+$git_commitcount= shell_exec('git log --pretty=oneline --no-merges --first-parent | wc -l | sed "s/[ \t]//g"');
+if(isset($git_revision) AND isset($git_commitcount)){
+	$maincode=file_get_contents("config.inc.php");
+	$maincode = str_replace('define("git-version","")', 'define("git-version","git-'.substr($git_commitcount, 0, -1).'-'.$git_revision.'")', $maincode);
+	$fp = fopen("config.inc.php", 'w');
+	fwrite($fp, $maincode);
+	fclose($fp);
+}
+ ?>
