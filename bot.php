@@ -30,6 +30,8 @@ $dltimer = array();
 $timer = time();
 $stime = time();
 $fgr = "";
+$connect = mysql_connect($mysql_host, $mysql_user, $mysql_pw);
+$db = mysql_select_db($mysql_db, $connect);
 stream_set_blocking($socket,0);
 putSocket("PASS ".$pass);
 putSocket("NICK ".$botnick);
@@ -522,12 +524,13 @@ function send_debug ($data, $channel = null){
 	}
 }
 function mysql_send_query ($data) {
-	global $mysql_host, $mysql_user, $mysql_pw, $mysql_db;
-	$link = mysql_connect($mysql_host, $mysql_user, $mysql_pw);
-	$db = mysql_select_db($mysql_db, $link);
-	$return = mysql_query($data, $link) or die(mysql_error());
+	global $mysql_host, $mysql_user, $mysql_pw, $mysql_db, $connect, $db;
+	if(!mysql_ping()) {
+		$connect = mysql_connect($mysql_host, $mysql_user, $mysql_pw);
+		$db = mysql_select_db($mysql_db, $connect);
+	}
+	$return = mysql_query($data, $connect) or die(mysql_error());
 	return $return;
-	mysql_close($link);
 }
 
 function putSocket ($line) {
