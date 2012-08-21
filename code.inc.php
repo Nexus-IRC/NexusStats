@@ -136,16 +136,16 @@ if ($exp[1] == "PRIVMSG") {
 				}
 				break;
 			case $trigger."version":
-				if(defined("git-version")) {
-					notice($nick, "NexusStats ".git-version.", written by Stricted");
+				if($gitversion) {
+					notice($nick, "NexusStatsv".$version." (".$gitversion."), written by Stricted");
 				}else{
 					notice($nick, "NexusStats v".$version.", written by Stricted");
 				}
 				notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git;a=summary");
 				notice($nick, "special thanks to:");
 				notice($nick, " Ultrashadow  (testing and ideas)");
-				if(defined("git-version")) {
-					notice($nick,check_version);
+				if($gitversion) {
+					notice($nick,check_version());
 				}
 				break;
 		}

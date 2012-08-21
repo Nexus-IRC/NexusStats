@@ -22,7 +22,7 @@ $git_revision = shell_exec('git log -n 1 --pretty="format:%h"');
 $git_commitcount= shell_exec('git log --pretty=oneline --no-merges --first-parent | wc -l | sed "s/[ \t]//g"');
 if(isset($git_revision) AND isset($git_commitcount)){
 	$maincode=file_get_contents("config.inc.php");
-	$maincode = str_replace('define("git-version","")', 'define("git-version","git-'.substr($git_commitcount, 0, -1).'-'.$git_revision.'")', $maincode);
+	$maincode = str_replace('$gitversion="";', '$gitversion="git-'.substr($git_commitcount, 0, -1).'-'.$git_revision.'";', $maincode);
 	$fp = fopen("config.inc.php", 'w');
 	fwrite($fp, $maincode);
 	fclose($fp);

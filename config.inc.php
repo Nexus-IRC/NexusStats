@@ -37,5 +37,5 @@ $mysql_host		= "localhost";
 $mysql_user		= "user";
 $mysql_pw		= "pw";
 $mysql_db		= "db";
-define("git-version","");
+$gitversion="";
 ?>
