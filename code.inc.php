@@ -26,7 +26,11 @@ if ($exp[1] == "PRIVMSG") {
 			create_log($cha,"[".@date("H:i")."] * ".$nick." ".$act[1]);
 		}
 	}elseif($act[0] == "\001VERSION\001"){
-		notice($nick,"\001VERSION ".$version." - Parser: ".PHP_VERSION);
+		if($gitversion){
+			notice($nick,"\001VERSION v".$version." (".$gitversion.")");
+		}else{
+			notice($nick,"\001VERSION v".$version."");
+		}
 	}elseif($act[0] == "\001UPTIME\001"){
 		notice($nick,"\001UPTIME ".time2str(time() - $stime));
 	}elseif($act[0] == "\001TIME\001"){
