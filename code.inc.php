@@ -100,7 +100,7 @@ if ($exp[1] == "PRIVMSG") {
 					require_once("Table.class.php");
 					$table = new Table(3);
 					$table->add("Name", "Lang", "URL");
-					$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+					$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0' ORDER BY `ID` ASC");
 					while ( $row = mysql_fetch_array($result) ){
 						$b = @substr($row['Name'], 1);
 						$c = $row['Lang'];
@@ -158,10 +158,12 @@ if ($exp[1] == "INVITE") {
 		$chan = $exp[3];
 	}
 	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '1'");
-	if($a == $chan){
+	$row = mysql_fetch_array($a);
+	if($row['Name'] == $chan){
 	} else {
-		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '0'");
-		if($a == $chan){
+		$b = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '0'");
+		$row2 = mysql_fetch_array($b);
+		if($row2['Name'] == $chan){
 			putSocket("join ".$exp[3]);
 		}else{
 			create_chan($exp[3]);
