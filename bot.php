@@ -342,6 +342,7 @@ function reset_stats ($chan = null) {
 
 
 function debug ($chan, $data = null) {
+	global $server, $port, $botnick, $pass, $admin, $logdir, $cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $trigger, $debugchannel, $debuglog, $version, $mysql_host, $mysql_user, $mysql_pw, $mysql_db, $gitversion, $createversion;
 	if(isset($data)){ //optional
 		ob_start();
 		$ret = eval($data);
