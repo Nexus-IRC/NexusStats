@@ -164,7 +164,7 @@ function set_lang ($chan, $lang = null) {
 }
 
 function create_conf ($channel = null, $lang = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick;
 	if(isset($channel)){//optional
 		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
 		$row = mysql_fetch_array($a);
