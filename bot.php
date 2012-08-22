@@ -17,7 +17,8 @@
 *                                                                      *
 ***********************************************************************/
 /* config start */
-require_once("config.inc.php");
+include("config.inc.php");
+include("version.php");
 /* config end */
 echo("################################\n");
 echo("#### Starting NexusStats        \n");

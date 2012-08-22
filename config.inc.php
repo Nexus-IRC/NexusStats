@@ -32,10 +32,11 @@ $defaultlang 	= "EN";
 $trigger		= "?";
 $debugchannel	= "#Nexus";
 $debuglog		= "/home/stats/debug.log";
-$version		= "2.1-public";
+$version		= "2.1";
 $mysql_host		= "localhost";
 $mysql_user		= "user";
 $mysql_pw		= "pw";
 $mysql_db		= "db";
 $gitversion="";
+$createversion=true;
 ?>
