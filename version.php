@@ -35,6 +35,7 @@ if($createversion ==true){
 		fwrite($fp, $maincode);
 		fclose($fp);
 	}
+	echo "Please start the bot again";
 	exit(0);
 }
  ?>

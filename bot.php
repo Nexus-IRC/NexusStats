@@ -36,7 +36,7 @@ $db = mysql_select_db($mysql_db, $connect);
 stream_set_blocking($socket,0);
 putSocket("PASS ".$pass);
 putSocket("NICK ".$botnick);
-putSocket("USER ".$botnick." 0 * :".$botick." (php".PHP_VERSION.")");
+putSocket("USER ".$botnick." 0 * :".$botnick." (php".PHP_VERSION.")");
 
 while (true) {
     if (feof($socket)) {
@@ -48,7 +48,7 @@ while (true) {
         stream_set_blocking($socket,0);
         putSocket("PASS ".$pass);
 		putSocket("NICK ".$botnick);
-		putSocket("USER ".$botnick." 0 * :".$botick." (php".PHP_VERSION.")");
+		putSocket("USER ".$botnick." 0 * :".$botnick." (php".PHP_VERSION.")");
     }    
     if (time() >= $timer + 1) {
         $timer = time();
@@ -129,7 +129,7 @@ function create_noreg ($channel, $nick) {
 	}
 }
 
-function create_chan (strtolower($channel) {
+function create_chan ($channel) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 	$cha = @substr($channel, 1);
 	create_conf(strtolower($channel));
@@ -143,7 +143,7 @@ function set_lang ($chan, $lang = null) {
 	if(isset($lang)){	
 		$cha = @substr($chan, 1);
 		if (file_exists($cfgdir.$cha.".cfg")) {
-			create_conf(strtolower($chan, $lang);
+			create_conf(strtolower($chan), $lang);
 			mysql_send_query("UPDATE `Channel` SET `Lang` = '".$lang."' WHERE `Name` = '".strtolower($chan)."'");
 			@unlink($statsdir.strtolower($cha).".php");
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.strtolower($cha).".cfg");
@@ -199,7 +199,7 @@ function create_conf ($channel = null, $lang = null) {
 				send_debug("Config for channel ".strtolower($channel)." createt");
 			}else{
 				$cha = @substr($channel, 1);
-				@unlink($cfgdir.strtolower($cha.".cfg");
+				@unlink($cfgdir.strtolower($cha).".cfg");
 				$text1  = "<channel='".strtolower($channel)."'>\n";
 				$text2  = "Logfile = '".$logdir.strtolower($cha).".log'\n";
 				$text3  = "ColorScheme = 'default'\n";
@@ -263,7 +263,7 @@ function del_chan ($channel) {
 	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".strtolower($channel)."' AND `Noreg` = '0'");
 	$row = mysql_fetch_array($a);
 	if(strtolower($row['Name']) == strtolower($channel)){
-		$cha = strtolower(@substr($channel, 1);
+		$cha = strtolower(@substr($channel, 1));
 		@unlink($cfgdir.strtolower($cha).".cfg");
 		@unlink($logdir.strtolower($cha).".log");
 		@unlink($statsdir.strtolower($cha).".php");
@@ -332,7 +332,7 @@ function reset_stats ($chan = null) {
 			copy($statsdir.strtolower(substr($row['Name'], 1)).".php", $archivdir.strtolower(substr($row['Name'], 1)).".php");
 			@unlink($statsdir.strtolower(substr($row['Name'], 1)).".php");
 			privmsg($row['Name'],"Stats Reset, Archiv: ".$aurl.strtolower(substr($row['Name'], 1)));
-			create_log(strtolower(substr($row['Name'], 1), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.strtolower(substr($row['Name'], 1)));
+			create_log(strtolower(substr($row['Name'], 1)), "[".@date("H:i")."] <".$botnick."> Stats Reset, Archiv: ".$aurl.strtolower(substr($row['Name'], 1)));
 			create_stats(strtolower($row['Name']));
 		}
 		create_timer("24h","stats");
