@@ -64,10 +64,10 @@ if ($exp[1] == "PRIVMSG") {
 			case $trigger."reg":
 				if($host[1] == $admin){
 					if($exp[4]){
-						$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$exp[4]."' AND `Noreg` = '1'");
+						$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".strtolower($exp[4])."' AND `Noreg` = '1'");
 						$row = mysql_fetch_array($a);
-						if($row['Name'] == $exp[4]){
-							notice($nick,"Der Channel: ".$exp[4]." steht auf der nicht registrieren liste.");
+						if(strtolower($row['Name']) == strtolower($exp[4])){
+							notice($nick,"Der Channel: ".strtolower($exp[4])." steht auf der nicht registrieren liste.");
 						} else {						
 							create_chan($exp[4]);
 						}
@@ -104,7 +104,7 @@ if ($exp[1] == "PRIVMSG") {
 					while ( $row = mysql_fetch_array($result) ){
 						$b = @substr($row['Name'], 1);
 						$c = $row['Lang'];
-						$table->add($row['Name'], $c, $url.$b);
+						$table->add(strtolower($row['Name']), $c, $url.$b);
 					}
 					$lines = $table->end();
 					$i = -1;
