@@ -28,6 +28,12 @@ if($createversion ==true){
 		$fp = fopen("config.inc.php", 'w');
 		fwrite($fp, $maincode);
 		fclose($fp);
+	}else{
+		$maincode=file_get_contents("config.inc.php");
+		$maincode = str_replace('$createversion=true;', '$createversion=false;', $maincode);
+		$fp = fopen("config.inc.php", 'w');
+		fwrite($fp, $maincode);
+		fclose($fp);
 	}
 	exit(0);
 }
