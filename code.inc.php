@@ -152,6 +152,13 @@ if ($exp[1] == "PRIVMSG") {
 					notice($nick,check_version());
 				}
 				break;
+			case $trigger."checkversion":
+				if($host[1] == $admin){
+					check_version($nick);			
+				}else{
+					break;
+				}
+				break;
 		}
 	}
 }
