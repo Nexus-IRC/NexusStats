@@ -22,7 +22,11 @@ if($createversion ==true){
 	$git_revision = shell_exec("git rev-list -n 1 --pretty='format:%h' --header master | grep '^[0-9a-f]*$'");
 	$git_commitcount= shell_exec('git rev-list --oneline --header master | wc -l | sed "s/[ \t]//g"');
 	$codelines= shell_exec("find . -type f -regex '\./.*\.php' |xargs cat|wc -l");
-	$creation= date("D M Y")." at ".date("G:i:s");
+	$creation=shell_exec("date | \
+awk '{if (NF == 6) \
+	 { print $1 \" \" $2 \" \" $3 \" \" $6 \" at \" $4 \" \" $5 } \
+else \
+	 { print $1 \" \" $2 \" \" $3 \" \" $7 \" at \" $4 \" \" $5 \" \" $6 }}'");
 	if(isset($git_revision) AND isset($git_commitcount)){
 		$maincode=file_get_contents("config.inc.php");
 		$maincode = str_replace('$gitversion="";', '$gitversion="git-'.substr($git_commitcount, 0, -1).'-'.$git_revision.'";', $maincode);
