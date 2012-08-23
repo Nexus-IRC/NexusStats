@@ -40,5 +40,5 @@ $mysql_db		= "db";
 $gitversion="";
 $createversion=true;
 $codelines="";
-$$creation="";
+$creation="";
 ?>
