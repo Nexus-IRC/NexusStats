@@ -32,7 +32,7 @@ else \
 		$maincode = str_replace('$gitversion="";', '$gitversion="git-'.substr($git_commitcount, 0, -1).'-'.$git_revision.'";', $maincode);
 		$maincode = str_replace('$createversion=true;', '$createversion=false;', $maincode);
 		$maincode = str_replace('$codelines="";', '$codelines="'.substr($codelines, 0, -1).'";', $maincode);
-		$maincode = str_replace('$creation="";', '$creation="'.$creation.'";', $maincode);
+		$maincode = str_replace('$creation="";', '$creation="'.substr($creation, 0, -1).'";', $maincode);
 		$fp = fopen("config.inc.php", 'w');
 		fwrite($fp, $maincode);
 		fclose($fp);
@@ -40,7 +40,7 @@ else \
 		$maincode=file_get_contents("config.inc.php");
 		$maincode = str_replace('$createversion=true;', '$createversion=false;', $maincode);
 		$maincode = str_replace('$codelines="";', '$codelines="'.substr($codelines, 0, -1).'";', $maincode);
-		$maincode = str_replace('$creation="";', '$creation="'.$creation.'";', $maincode);
+		$maincode = str_replace('$creation="";', '$creation="'.substr($creation, 0, -1).'";', $maincode);
 		$fp = fopen("config.inc.php", 'w');
 		fwrite($fp, $maincode);
 		fclose($fp);
