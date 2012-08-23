@@ -19,8 +19,8 @@
 
 // RUN THIS SCRIPT FIRST
 if($createversion ==true){
-	$git_revision = shell_exec('git log -n 1 --pretty="format:%h"');
-	$git_commitcount= shell_exec('git log --pretty=oneline --no-merges --first-parent | wc -l | sed "s/[ \t]//g"');
+	$git_revision = shell_exec("git rev-list -n 1 --pretty='format:%h' --header master | grep '^[0-9a-f]*$'");
+	$git_commitcount= shell_exec('git rev-list --oneline --header master | wc -l | sed "s/[ \t]//g"');
 	if(isset($git_revision) AND isset($git_commitcount)){
 		$maincode=file_get_contents("config.inc.php");
 		$maincode = str_replace('$gitversion="";', '$gitversion="git-'.substr($git_commitcount, 0, -1).'-'.$git_revision.'";', $maincode);

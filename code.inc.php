@@ -27,9 +27,9 @@ if ($exp[1] == "PRIVMSG") {
 		}
 	}elseif($act[0] == "\001VERSION\001"){
 		if($gitversion){
-			notice($nick,"\001VERSION v".$version." (".$gitversion.")");
+			notice($nick,"\001VERSION NexusStats ".$version." by Stricted (".$gitversion.")");
 		}else{
-			notice($nick,"\001VERSION v".$version."");
+			notice($nick,"\001VERSION NexusStats ".$version." by Stricted");
 		}
 	}elseif($act[0] == "\001UPTIME\001"){
 		notice($nick,"\001UPTIME ".time2str(time() - $stime));
