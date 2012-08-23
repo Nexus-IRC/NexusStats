@@ -145,7 +145,7 @@ if ($exp[1] == "PRIVMSG") {
 				}else{
 					notice($nick, "NexusStats v".$version.", written by Stricted");
 				}
-				notice($nick, "Build ".$creation." (".$codelines." lines, ".PHP_VERSION.")");
+				notice($nick, "Build ".$creation." (".$codelines." lines, PHP ".PHP_VERSION.")");
 				notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git");
 				notice($nick, "special thanks to:");
 				notice($nick, " Ultrashadow  (testing and ideas)");
