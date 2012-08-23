@@ -16,6 +16,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>. *
 *                                                                      *
 ***********************************************************************/
+/* Config start */
 $server 		= "localhost";
 $port 			= "8001";
 $botnick 		= "NexusStats";
@@ -37,8 +38,12 @@ $mysql_host		= "localhost";
 $mysql_user		= "user";
 $mysql_pw		= "pw";
 $mysql_db		= "db";
+/* Config end */
+
+/* dont touch this --> */
 $gitversion="";
 $createversion=true;
 $codelines="";
 $creation="";
+/* <-- Sont touch this */
 ?>

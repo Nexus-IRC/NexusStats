@@ -59,7 +59,7 @@ if ($exp[1] == "PRIVMSG") {
 					if($exp[4]){
 						create_noreg($exp[4],$nick);
 					}else{
-						notice($nick,"Du musst einen Channelnamen angeben");
+						notice($nick,"You must enter a channel name");
 					}
 				}else{
 					break;
@@ -71,12 +71,12 @@ if ($exp[1] == "PRIVMSG") {
 						$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$exp[4]."' AND `Noreg` = '1'");
 						$row = mysql_fetch_array($a);
 						if($row['Name'] == $exp[4]){
-							notice($nick,"Der Channel: ".$exp[4]." steht auf der nicht registrieren liste.");
+							notice($nick,"The Channel: ".$exp[4]." is on the not register list.");
 						} else {						
 							create_chan($exp[4]);
 						}
 					}else{
-						notice($nick,"Du musst einen Channelnamen angeben");
+						notice($nick,"You must enter a channel name");
 					}
 				}else{
 					break;
@@ -90,10 +90,10 @@ if ($exp[1] == "PRIVMSG") {
 						}elseif($exp[5] == "*"){
 							set_lang($exp[4],$defaultlang);
 						}else{
-							notice($nick,"Du musst einen Ländercode angeben");
+							notice($nick,"You must enter a country code");
 						}	
 					}else{
-						notice($nick,"Du musst einen Channelnamen angeben");
+						notice($nick,"You must enter a channel name");
 					}
 				}else{
 					break;
@@ -116,7 +116,7 @@ if ($exp[1] == "PRIVMSG") {
 						notice($nick, $line);
 						$i++;
 					}
-					notice($nick,"\002".$i."\002 channel gefunden");
+					notice($nick,"\002".$i."\002 channels found");
 				}else{
 					break;
 				}
@@ -227,7 +227,7 @@ if ($exp[1] == "KICK") {
 }
 if ($exp[1] == "TOPIC") {
 	$cha = @substr($exp[2], 1);
-	$kk = explode(":",$fg,3);
-	create_log($cha,"[".@date("H:i")."] *** ".$nick." changes topic to '".$kk[2]."'");
+	$kk = explode(" ",$fg,4);
+	create_log($cha,"[".@date("H:i")."] *** ".$nick." changes topic to '".@substr($kk[3], 1)."'");
 }
 ?>
