@@ -39,4 +39,6 @@ $mysql_pw		= "pw";
 $mysql_db		= "db";
 $gitversion="";
 $createversion=true;
+$codelines="";
+$$creation="";
 ?>

@@ -21,16 +21,22 @@
 if($createversion ==true){
 	$git_revision = shell_exec("git rev-list -n 1 --pretty='format:%h' --header master | grep '^[0-9a-f]*$'");
 	$git_commitcount= shell_exec('git rev-list --oneline --header master | wc -l | sed "s/[ \t]//g"');
+	$codelines= shell_exec("find . -type f -regex '\./.*\.php' |xargs cat|wc -l");
+	$creation= date("D M Y")." at ".date("G:i:s");
 	if(isset($git_revision) AND isset($git_commitcount)){
 		$maincode=file_get_contents("config.inc.php");
 		$maincode = str_replace('$gitversion="";', '$gitversion="git-'.substr($git_commitcount, 0, -1).'-'.$git_revision.'";', $maincode);
 		$maincode = str_replace('$createversion=true;', '$createversion=false;', $maincode);
+		$maincode = str_replace('$codelines="";', '$codelines="'.$codelines.'";', $maincode);
+		$maincode = str_replace('$creation="";', '$creation="'.$creation.'";', $maincode);
 		$fp = fopen("config.inc.php", 'w');
 		fwrite($fp, $maincode);
 		fclose($fp);
 	}else{
 		$maincode=file_get_contents("config.inc.php");
 		$maincode = str_replace('$createversion=true;', '$createversion=false;', $maincode);
+		$maincode = str_replace('$codelines="";', '$codelines="'.$codelines.'";', $maincode);
+		$maincode = str_replace('$creation="";', '$creation="'.$creation.'";', $maincode);
 		$fp = fopen("config.inc.php", 'w');
 		fwrite($fp, $maincode);
 		fclose($fp);
