@@ -18,8 +18,8 @@
 ***********************************************************************/  
 if ($exp[1] == "PRIVMSG") {
 	$cha = @substr($exp[2], 1);
-	$kk = explode(":",$fg,3);
-	$act = explode(" ",$kk[2],2);
+	$kk = explode(" ",$fg,4);
+	$act = explode(" ",@substr($kk[3], 1)),2);
 	if($act[0] == "\001ACTION"){
 		if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
 		}else{
@@ -42,7 +42,7 @@ if ($exp[1] == "PRIVMSG") {
 	}else{
 		if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
 		}else{
-			create_log($cha,"[".@date("H:i")."] <".$nick."> ".$kk[2]);
+			create_log($cha,"[".@date("H:i")."] <".$nick."> ".@substr($kk[3], 1));
 		}
 	}
 	
