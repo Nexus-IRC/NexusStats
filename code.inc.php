@@ -19,7 +19,7 @@
 if ($exp[1] == "PRIVMSG") {
 	$cha = @substr($exp[2], 1);
 	$kk = explode(" ",$fg,4);
-	$act = explode(" ",@substr($kk[3], 1)),2);
+	$act = explode(" ",@substr($kk[3], 1),2);
 	if($act[0] == "\001ACTION"){
 		if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
 		}else{
