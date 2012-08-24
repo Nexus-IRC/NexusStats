@@ -17,34 +17,34 @@
 *                                                                      *
 ***********************************************************************/
 /* Config start */
-$server 		= "localhost";
-$port 			= "8001";
-$botnick 		= "NexusStats";
-$pass 			= "NexusStats:xxxx";
-$network		= "OnlineGamesNet";
-$admin 			= "Stricted2.user.OnlineGamesNet";
-$logdir 		= "/home/stats/pisg-0.73/log/";
-$cfgdir			= "/home/stats/pisg-0.73/cfg/";
-$statsdir		= "/var/customers/webs/nexus/stats/chan/";
-$archivdir		= "/var/customers/webs/nexus/stats/archiv/";
-$pisgdir		= "/home/stats/pisg-0.73/";
-$url			= "http://stats.nexus-irc.de/?c=";
-$aurl			= "http://stats.nexus-irc.de/?ac=";
-$defaultlang 	= "EN";
-$trigger		= "?";
-$debugchannel	= "#Nexus";
-$debuglog		= "/home/stats/debug.log";
-$version		= "2.1";
-$mysql_host		= "localhost";
-$mysql_user		= "user";
-$mysql_pw		= "pw";
-$mysql_db		= "db";
+$server="";
+$port="";
+$botnick="";
+$pass="";
+$network="";
+$admin="";
+$logdir="";
+$cfgdir="";
+$statsdir="";
+$archivdir="";
+$pisgdir="";
+$url="";
+$aurl="";
+$defaultlang="";
+$trigger="";
+$debugchannel="";
+$debuglog="";
+$version="";
+$mysql_host="";
+$mysql_user="";
+$mysql_pw="";
+$mysql_db="";
 /* Config end */
 
 /* dont touch this --> */
 $gitversion="";
-$createversion=true;
 $codelines="";
 $creation="";
+$install=true;
 /* <-- Sont touch this */
 ?>

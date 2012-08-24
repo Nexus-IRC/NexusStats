@@ -18,7 +18,10 @@
 ***********************************************************************/
 /* config start */
 include("config.inc.php");
-include("version.php");
+if($install ==true){
+	echo"run install.php\n";
+	exit(0);
+}
 /* config end */
 echo("################################\n");
 echo("#### Starting NexusStats        \n");
