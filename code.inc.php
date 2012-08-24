@@ -160,6 +160,14 @@ if ($exp[1] == "PRIVMSG") {
 					break;
 				}
 				break;
+			case $trigger."info":
+				putSocket("NOTICE $nick :\002Bot information\002");
+				putSocket("NOTICE $nick :\002Bot Uptime         \002:     ".time2str(time() - $stime));
+				putSocket("NOTICE $nick :\002Maximal Memory Use \002:     ".round((memory_get_peak_usage()/1024/1024),2)." MBytes");
+				putSocket("NOTICE $nick :\002         Right now \002:     ".round((memory_get_usage()/1024/1024),2)." MBytes");
+				putSocket("NOTICE $nick :\002Incoming Traffic   \002:     ".round(($glob['dat_in']/1024/1024),2)." MBytes");
+				putSocket("NOTICE $nick :\002Outgoing Traffic   \002:     ".round(($glob['dat_out']/1024/1024),2)." MBytes");
+				break;
 		}
 	}
 }

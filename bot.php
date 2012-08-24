@@ -31,6 +31,7 @@ $dltimer = array();
 $timer = time();
 $stime = time();
 $fgr = "";
+$glob=array();
 $connect = mysql_connect($mysql_host, $mysql_user, $mysql_pw);
 $db = mysql_select_db($mysql_db, $connect);
 stream_set_blocking($socket,0);
@@ -61,6 +62,7 @@ while (true) {
     }
     usleep(1000);
     while ($fg = fgets($socket)) {
+		$glob['dat_in'] = $glob['dat_in'] + strlen($fg);
 		global $fgr;
 		$fg = utf8_decode(str_replace("\r","",str_replace("\n","",$fg)));
 		$fgr = $fg;
@@ -560,7 +562,8 @@ function mysql_send_query ($data) {
 function putSocket ($line) {
     echo(">>$line\n");
     flush();
-    global $socket;
+    global $socket, $glob;
+	$glob['dat_out'] = $glob['dat_out'] + strlen($line);
     fwrite($socket,$line."\n");
 }
 ?>
