@@ -1,6 +1,6 @@
 <?php     
 /***********************************************************************
-* Copyright (C) 2011  Jan Altensen (Stricted)                          *
+* Copyright (C) 2012  Jan Altensen (Stricted)                          *
 * email: info@webhostmax.de                                            *
 * This program is free software: you can redistribute it and/or modify *
 * it under the terms of the GNU General Public License as published by *
