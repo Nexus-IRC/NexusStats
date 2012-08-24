@@ -21,6 +21,7 @@ $server 		= "localhost";
 $port 			= "8001";
 $botnick 		= "NexusStats";
 $pass 			= "NexusStats:xxxx";
+$network		= "OnlineGamesNet";
 $admin 			= "Stricted2.user.OnlineGamesNet";
 $logdir 		= "/home/stats/pisg-0.73/log/";
 $cfgdir			= "/home/stats/pisg-0.73/cfg/";

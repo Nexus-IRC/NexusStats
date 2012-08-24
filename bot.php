@@ -63,7 +63,6 @@ while (true) {
     usleep(1000);
     while ($fg = fgets($socket)) {
 		$glob['dat_in'] = $glob['dat_in'] + strlen($fg);
-		global $fgr;
 		$fg = utf8_decode(str_replace("\r","",str_replace("\n","",$fg)));
 		$fgr = $fg;
         echo ("<<".$fg."\n");
@@ -167,7 +166,7 @@ function set_lang ($chan, $lang = null) {
 }
 
 function create_conf ($channel = null, $lang = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick, $network;
 	if(isset($channel)){//optional
 		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
 		$row = mysql_fetch_array($a);
@@ -181,7 +180,7 @@ function create_conf ($channel = null, $lang = null) {
 				$text4  = "Format = 'mIRC'\n";
 				$text5  = "Lang = '".$lang."'\n";
 				$text6  = "DailyActivity = '31'\n";	
-				$text7  = "Network= 'OnlineGamesNet'\n";
+				$text7  = "Network= '".$network."'\n";
 				$text8  = "Maintainer = '".$botnick."'\n";
 				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
 				$text10 = "</channel>\n";
@@ -208,7 +207,7 @@ function create_conf ($channel = null, $lang = null) {
 				$text4  = "Format = 'mIRC'\n";
 				$text5  = "Lang = 'EN'\n";
 				$text6  = "DailyActivity = '31'\n";	
-				$text7  = "Network= 'OnlineGamesNet'\n";
+				$text7  = "Network= '".$network."'\n";
 				$text8  = "Maintainer = '".$botnick."'\n";
 				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
 				$text10 = "</channel>\n";
@@ -238,7 +237,7 @@ function create_conf ($channel = null, $lang = null) {
 			$text4  = "Format = 'mIRC'\n";
 			$text5  = "Lang = '".$row['Lang']."'\n";
 			$text6  = "DailyActivity = '31'\n";	
-			$text7  = "Network= 'OnlineGamesNet'\n";
+			$text7  = "Network= '".$network."'\n";
 			$text8  = "Maintainer = '".$botnick."'\n";
 			$text9  = "OutputFile = '".$statsdir.substr($row['Name'], 1).".php'\n";
 			$text10 = "</channel>\n";
