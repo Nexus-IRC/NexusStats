@@ -167,6 +167,13 @@ if ($exp[1] == "PRIVMSG") {
 				putSocket("NOTICE $nick :\002         Right now \002:     ".round((memory_get_usage()/1024/1024),2)." MBytes");
 				putSocket("NOTICE $nick :\002Incoming Traffic   \002:     ".round(($glob['dat_in']/1024/1024),2)." MBytes");
 				putSocket("NOTICE $nick :\002Outgoing Traffic   \002:     ".round(($glob['dat_out']/1024/1024),2)." MBytes");
+				if($gitversion) {
+					putSocket("NOTICE $nick :\002Version            \002:     ".$version."  (".$gitversion.")");
+				}else{
+					putSocket("NOTICE $nick :\002Version            \002:     ".$version);
+				}
+				putSocket("NOTICE $nick :\002Parser             \002:     ".PHP_VERSION);
+				putSocket("NOTICE $nick :\002Code               \002:     ".$codelines." lines PHP code (view it at http://git.nexus-irc.de/?p=NexusStats.git)");          
 				break;
 		}
 	}
