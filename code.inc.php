@@ -25,23 +25,23 @@ if ($exp[1] == "315") {
 	$x = explode(",",$exp[3]);
 	$target = $x[0];
 	$id = $x[1];
-	unset($channel[$target]["users"]);
+	unset($channeluser[$target]["users"]);
 	if ($id == 2) {
 		foreach ($users as $unick) {
 			$xx = "$unick";
-			$channel[$target][$xx] = $xx;
+			$channeluser[$target][$xx] = $xx;
 		}
 		unset($users);
 	}
 }
 if ($exp[1] == "PRIVMSG") {
-	$cha = @substr($exp[2], 1);
 	$kk = explode(" ",$fg,4);
 	$act = explode(" ",@substr($kk[3], 1),2);
+	$cha = @substr($kk[2], 1);
 	if($act[0] == "\001ACTION"){
 		if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
 		}else{
-			create_log($cha,"[".@date("H:i")."] * ".$nick." ".$act[1]);
+			create_log($kk[2],"[".@date("H:i")."] * ".$nick." ".$act[1]);
 		}
 	}elseif($act[0] == "\001VERSION\001"){
 		if($gitversion){
@@ -60,7 +60,7 @@ if ($exp[1] == "PRIVMSG") {
 	}else{
 		if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
 		}else{
-			create_log($cha,"[".@date("H:i")."] <".$nick."> ".@substr($kk[3], 1));
+			create_log($kk[2],"[".@date("H:i")."] <".$nick."> ".@substr($kk[3], 1));
 		}
 	}
 	
@@ -227,7 +227,7 @@ if ($exp[1] == "JOIN") {
 			$cha = @substr($exp[2], 1);
 			$chan = $exp[2];
 		}
-		create_log($cha,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") has joined ".$chan);
+		create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") has joined ".$chan);
 		who($chan, "2");
 	}
 }
@@ -242,7 +242,7 @@ if ($exp[1] == "PART") {
 			$cha = @substr($exp[2], 1);
 			$chan = $exp[2];
 		}
-		create_log($cha,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") has left ".$chan);
+		create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") has left ".$chan);
 		who($chan, "2");
 	}
 }
@@ -257,17 +257,40 @@ if ($exp[1] == "KICK") {
 	if($exp[3] == $botnick OR $exp[3] == $botnick."|ZNC") {
 		del_chan($exp[2]);
 	}else{
+		if($exp[2][0] == ":") {
+			$cha2 = @substr($exp[2], 1);
+			$cha = @substr($cha2, 1);
+			$chan = @substr($exp[2], 1);
+		}else{
+			$cha = @substr($exp[2], 1);
+			$chan = $exp[2];
+		}
 		$cha = @substr($exp[2], 1);
-		create_log($cha,"[".@date("H:i")."] *** ".$exp[3]." was kicked by ".$nick." (".@substr($exp[4], 1).")");
+		create_log($chan,"[".@date("H:i")."] *** ".$exp[3]." was kicked by ".$nick." (".@substr($exp[4], 1).")");
 	}
 }
 if ($exp[1] == "TOPIC") {
 	$cha = @substr($exp[2], 1);
 	$kk = explode(" ",$fg,4);
-	create_log($cha,"[".@date("H:i")."] *** ".$nick." changes topic to '".@substr($kk[3], 1)."'");
+	create_log($exp[2],"[".@date("H:i")."] *** ".$nick." changes topic to '".@substr($kk[3], 1)."'");
 }
 if ($exp[1] == "NICK") {
-	//<<:Stricted|afk!Stricted2@Stricted2.user.OnlineGamesNet NICK :Stricted
-	
+	foreach ($channeluser as $chan => $users) { 
+		foreach ($users as $id => $user) { 
+			if ($user == $nick) { 
+				$ni = @substr($exp[2], 1);
+				create_log($chan,"[".@date("H:i")."] *** ".$nick." is now known as ".$ni);
+			}
+		} 
+	}
+}
+if ($exp[1] == "QUIT") {
+	foreach ($channeluser as $chan => $users) { 
+		foreach ($users as $id => $user) { 
+			if ($user == $nick) { 
+				create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") Quit (".@substr($exp[2], 1).")");
+			}
+		} 
+	}
 }
 ?>

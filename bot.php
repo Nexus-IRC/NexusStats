@@ -18,10 +18,7 @@
 ***********************************************************************/
 /* config start */
 include("config.inc.php");
-if($install ==true){
-	echo"run install.php\n";
-	exit(0);
-}
+include("version.php");
 /* config end */
 echo("################################\n");
 echo("#### Starting NexusStats        \n");
@@ -35,6 +32,7 @@ $timer = time();
 $stime = time();
 $fgr = "";
 $glob=array();
+$channeluser=array();
 $connect = mysql_connect($mysql_host, $mysql_user, $mysql_pw);
 $db = mysql_select_db($mysql_db, $connect);
 stream_set_blocking($socket,0);
@@ -43,7 +41,7 @@ putSocket("NICK ".$botnick);
 putSocket("USER ".$botnick." 0 * :".$botnick." (php".PHP_VERSION.")");
 
 while (true) {
-    if (feof($socket)) {
+   /if (feof($socket)) {
         $socket = fsockopen($server,$port,$errstr,$errno,2);
         $dltimer = array();
         $timer = time();
@@ -53,7 +51,7 @@ while (true) {
         putSocket("PASS ".$pass);
 		putSocket("NICK ".$botnick);
 		putSocket("USER ".$botnick." 0 * :".$botnick." (php".PHP_VERSION.")");
-    }    
+    }   
     if (time() >= $timer + 1) {
         $timer = time();
         $thistime = time();
@@ -66,6 +64,7 @@ while (true) {
     usleep(1000);
     while ($fg = fgets($socket)) {
 		$glob['dat_in'] = $glob['dat_in'] + strlen($fg);
+		global $fgr;
 		$fg = utf8_decode(str_replace("\r","",str_replace("\n","",$fg)));
 		$fgr = $fg;
         echo ("<<".$fg."\n");
@@ -81,7 +80,7 @@ while (true) {
         if ($exp[1] == "001") {
 			$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
 			while ( $row = mysql_fetch_array($result) ){
-				putSocket("JOIN ".$row['Name']); //debug channel
+				putSocket("JOIN ".$row['Name']);
 				who($row['Name'], "2");
 			}
             putSocket("JOIN ".$debugchannel); //debug channel
@@ -108,8 +107,10 @@ function create_log ($channel, $data) {
 		$b = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
 		$row2 = mysql_fetch_array($b);
 		if($row2['Name'] == $channel){
-			$inhalt = file_get_contents($logdir.$channel.".log");
-			file_put_contents($logdir.$channel.".log", $inhalt .= $data."\n");
+			$cha = @substr($channel, 1);
+			$inhalt = file_get_contents($logdir.$cha.".log");
+			file_put_contents($logdir.$cha.".log", $inhalt .= $data."\n");
+			echo"debug1";
 		}else{ 
 		}
 	}
@@ -170,7 +171,7 @@ function set_lang ($chan, $lang = null) {
 }
 
 function create_conf ($channel = null, $lang = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick, $network;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick;
 	if(isset($channel)){//optional
 		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
 		$row = mysql_fetch_array($a);
@@ -184,7 +185,7 @@ function create_conf ($channel = null, $lang = null) {
 				$text4  = "Format = 'mIRC'\n";
 				$text5  = "Lang = '".$lang."'\n";
 				$text6  = "DailyActivity = '31'\n";	
-				$text7  = "Network= '".$network."'\n";
+				$text7  = "Network= 'OnlineGamesNet'\n";
 				$text8  = "Maintainer = '".$botnick."'\n";
 				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
 				$text10 = "</channel>\n";
@@ -211,7 +212,7 @@ function create_conf ($channel = null, $lang = null) {
 				$text4  = "Format = 'mIRC'\n";
 				$text5  = "Lang = 'EN'\n";
 				$text6  = "DailyActivity = '31'\n";	
-				$text7  = "Network= '".$network."'\n";
+				$text7  = "Network= 'OnlineGamesNet'\n";
 				$text8  = "Maintainer = '".$botnick."'\n";
 				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
 				$text10 = "</channel>\n";
@@ -241,7 +242,7 @@ function create_conf ($channel = null, $lang = null) {
 			$text4  = "Format = 'mIRC'\n";
 			$text5  = "Lang = '".$row['Lang']."'\n";
 			$text6  = "DailyActivity = '31'\n";	
-			$text7  = "Network= '".$network."'\n";
+			$text7  = "Network= 'OnlineGamesNet'\n";
 			$text8  = "Maintainer = '".$botnick."'\n";
 			$text9  = "OutputFile = '".$statsdir.substr($row['Name'], 1).".php'\n";
 			$text10 = "</channel>\n";
