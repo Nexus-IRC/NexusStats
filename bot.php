@@ -264,6 +264,7 @@ function create_conf ($channel = null, $lang = null) {
 			fWrite($handler , $text7);
 			fWrite($handler , $text8);
 			fWrite($handler , $text9);
+			fWrite($handler , $text10);
 			fWrite($handler , $text11);
 			fClose($handler);
 		}
