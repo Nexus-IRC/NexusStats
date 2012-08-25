@@ -16,6 +16,24 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>. *
 *                                                                      *
 ***********************************************************************/  
+if ($exp[1] == "354") {
+	if ($exp[3] == "2") {
+		$users[] = $exp[4];
+	}
+}
+if ($exp[1] == "315") {
+	$x = explode(",",$exp[3]);
+	$target = $x[0];
+	$id = $x[1];
+	unset($channel[$target]["users"]);
+	if ($id == 2) {
+		foreach ($users as $unick) {
+			$xx = "$unick";
+			$channel[$target][$xx] = $xx;
+		}
+		unset($users);
+	}
+}
 if ($exp[1] == "PRIVMSG") {
 	$cha = @substr($exp[2], 1);
 	$kk = explode(" ",$fg,4);
@@ -149,6 +167,7 @@ if ($exp[1] == "PRIVMSG") {
 				notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git");
 				notice($nick, "special thanks to:");
 				notice($nick, " Ultrashadow  (testing and ideas)");
+				notice($nick, " pk910");
 				if($gitversion) {
 					notice($nick,check_version());
 				}
@@ -209,6 +228,7 @@ if ($exp[1] == "JOIN") {
 			$chan = $exp[2];
 		}
 		create_log($cha,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") has joined ".$chan);
+		who($chan, "2");
 	}
 }
 if ($exp[1] == "PART") {
@@ -223,6 +243,7 @@ if ($exp[1] == "PART") {
 			$chan = $exp[2];
 		}
 		create_log($cha,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") has left ".$chan);
+		who($chan, "2");
 	}
 }
 if ($exp[1] == "MODE") {
@@ -244,5 +265,9 @@ if ($exp[1] == "TOPIC") {
 	$cha = @substr($exp[2], 1);
 	$kk = explode(" ",$fg,4);
 	create_log($cha,"[".@date("H:i")."] *** ".$nick." changes topic to '".@substr($kk[3], 1)."'");
+}
+if ($exp[1] == "NICK") {
+	//<<:Stricted|afk!Stricted2@Stricted2.user.OnlineGamesNet NICK :Stricted
+	
 }
 ?>

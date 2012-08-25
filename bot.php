@@ -82,6 +82,7 @@ while (true) {
 			$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
 			while ( $row = mysql_fetch_array($result) ){
 				putSocket("JOIN ".$row['Name']); //debug channel
+				who($row['Name'], "2");
 			}
             putSocket("JOIN ".$debugchannel); //debug channel
 			create_timer("12h","stats");
@@ -407,6 +408,14 @@ function privmsg ($target, $data) {
 
 function notice ($target, $data) {
     putSocket("NOTICE ".$target." :".$data);
+}
+
+function who ($target, $args) {
+	if ($target[0] == "#") {
+		putSocket("WHO ".$target.",".$args." D%tnaf,".$args);
+	}else{
+		putSocket("WHO ".$target.",".$args." %tna,".$args);
+	}
 }
 
 function str2time ($line) {
