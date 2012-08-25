@@ -168,6 +168,7 @@ if ($exp[1] == "PRIVMSG") {
 				notice($nick, "special thanks to:");
 				notice($nick, " Ultrashadow  (testing and ideas)");
 				notice($nick, " pk910");
+				notice($nick, " Calisto");
 				if($gitversion) {
 					notice($nick,check_version());
 				}
