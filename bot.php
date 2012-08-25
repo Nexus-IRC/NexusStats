@@ -273,7 +273,7 @@ function create_conf ($channel = null, $lang = null) {
 
 function del_chan ($channel) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
-	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
+	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."'");
 	$row = mysql_fetch_array($a);
 	if($row['Name'] == $channel){
 		$cha = @substr($channel, 1);
