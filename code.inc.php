@@ -268,6 +268,7 @@ if ($exp[1] == "KICK") {
 		}
 		$cha = @substr($exp[2], 1);
 		create_log($chan,"[".@date("H:i")."] *** ".$exp[3]." was kicked by ".$nick." (".@substr($exp[4], 1).")");
+		who($chan, "2");
 	}
 }
 if ($exp[1] == "TOPIC") {
@@ -281,6 +282,7 @@ if ($exp[1] == "NICK") {
 			if ($user == $nick) { 
 				$ni = @substr($exp[2], 1);
 				create_log($chan,"[".@date("H:i")."] *** ".$nick." is now known as ".$ni);
+				who($chan, "2");
 			}
 		} 
 	}
@@ -290,6 +292,7 @@ if ($exp[1] == "QUIT") {
 		foreach ($users as $id => $user) { 
 			if ($user == $nick) { 
 				create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") Quit (".@substr($exp[2], 1).")");
+				who($chan, "2");
 			}
 		} 
 	}
