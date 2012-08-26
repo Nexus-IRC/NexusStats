@@ -25,11 +25,12 @@ if ($exp[1] == "315") {
 	$x = explode(",",$exp[3]);
 	$target = $x[0];
 	$id = $x[1];
-	unset($channeluser[$target]["users"]);
+	unset($channeluser[$target]);
 	if ($id == 2) {
+		$i=0;
 		foreach ($users as $unick) {
-			$xx = "$unick";
-			$channeluser[$target][$xx] = $xx;
+			$i++;
+			$channeluser[$target][$i] = $unick;
 		}
 		unset($users);
 	}
