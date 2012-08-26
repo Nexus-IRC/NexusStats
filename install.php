@@ -194,7 +194,7 @@ if($install ==true){
 	$maincode = str_replace('$mysql_pw="";', '$mysql_pw="'.$data['pass'].'";', $maincode);
 	$maincode = str_replace('$mysql_db="";', '$mysql_db="'.$data['base'].'";', $maincode);
 	$maincode = str_replace('$install=true;', '$install=false;', $maincode);
-	$maincode = str_replace('$version="";', '$version="2.1";', $maincode);
+	$maincode = str_replace('$version="";', '$version="2.2";', $maincode);
 	$fp = fopen("config.inc.php", 'w');
 	fwrite($fp, $maincode);
 	fclose($fp);
