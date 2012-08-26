@@ -131,7 +131,7 @@ function create_noreg ($channel, $nick) {
 	$row = mysql_fetch_array($a);
 	if($row['Name'] == $channel){
 		mysql_send_query("UPDATE `Channel` SET `Noreg` = '1' WHERE `Name` = '".$channel."'");
-		del_chan ($channel);
+		del_chan ($channel, true);
 		putSocket("PART ".$channel." :Unregistered by ".$nick.".");
 		send_debug("Add ".$channel." to the no register list");
 	}
@@ -272,8 +272,8 @@ function create_conf ($channel = null, $lang = null) {
 	}
 }
 
-function del_chan ($channel) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
+function del_chan ($channel, $noreg=null) {
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $channeluser;
 	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."'");
 	$row = mysql_fetch_array($a);
 	if($row['Name'] == $channel){
@@ -281,9 +281,13 @@ function del_chan ($channel) {
 		@unlink($cfgdir.$cha.".cfg");
 		@unlink($logdir.$cha.".log");
 		@unlink($statsdir.$cha.".php");
-		mysql_send_query("DELETE FROM `Channel` WHERE `Name` = '".$channel."'");
+		if(isset($noreg)){
+		}else{
+			mysql_send_query("DELETE FROM `Channel` WHERE `Name` = '".$channel."'");
+		}
 		putSocket("part ".$channel);
 		send_debug("Delete channel ".$channel);
+		unset($channeluser[$channel]);
 	}
 }
 

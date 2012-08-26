@@ -167,8 +167,8 @@ if ($exp[1] == "PRIVMSG") {
 				notice($nick, "NexusStats can be found on: http://git.nexus-irc.de/?p=NexusStats.git");
 				notice($nick, "special thanks to:");
 				notice($nick, " Ultrashadow  (testing and ideas)");
-				notice($nick, " pk910");
-				notice($nick, " Calisto");
+				notice($nick, " pk910        (ideas)");
+				notice($nick, " Calisto      (ideas)");
 				if($gitversion) {
 					notice($nick,check_version());
 				}
@@ -198,7 +198,7 @@ if ($exp[1] == "PRIVMSG") {
 		}
 	}
 }
-if ($exp[1] == "INVITE") {		
+if ($exp[1] == "INVITE") {
 	if($exp[3][0] == ":") {
 		$chan = @substr($exp[3], 1);
 	}else{
@@ -212,8 +212,10 @@ if ($exp[1] == "INVITE") {
 		$row2 = mysql_fetch_array($b);
 		if($row2['Name'] == $chan){
 			putSocket("join ".$exp[3]);
+			who($exp[3], "2");
 		}else{
 			create_chan($exp[3]);
+			who($exp[3], "2");
 		}
 	}
 }
@@ -256,7 +258,7 @@ if ($exp[1] == "MODE") {
 }
 if ($exp[1] == "KICK") {
 	if($exp[3] == $botnick OR $exp[3] == $botnick."|ZNC") {
-		del_chan($exp[2]);
+		del_chan($exp[2], false);
 	}else{
 		if($exp[2][0] == ":") {
 			$cha2 = @substr($exp[2], 1);
