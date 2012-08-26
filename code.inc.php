@@ -1,21 +1,20 @@
 <?php     
-/***********************************************************************
-* Copyright (C) 2012  Jan Altensen (Stricted)                          *
-* email: info@webhostmax.de                                            *
-* This program is free software: you can redistribute it and/or modify *
-* it under the terms of the GNU General Public License as published by *
-* the Free Software Foundation, either version 3 of the License, or    *
-* (at your option) any later version.                                  *
-*                                                                      *
-* This program is distributed in the hope that it will be useful,      *
-* but WITHOUT ANY WARRANTY; without even the implied warranty of       *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
-* GNU General Public License for more details.                         *
-*                                                                      *
-* You should have received a copy of the GNU General Public License    *
-* along with this program. If not, see <http://www.gnu.org/licenses/>. *
-*                                                                      *
-***********************************************************************/  
+/* code.inc.php - NexusStats v2.2
+ * Copyright (C) 2012  Jan Altensen (Stricted)
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>. 
+ */
 if ($exp[1] == "354") {
 	if ($exp[3] == "2") {
 		$users[] = $exp[4];
@@ -281,24 +280,30 @@ if ($exp[1] == "TOPIC") {
 	create_log($exp[2],"[".@date("H:i")."] *** ".$nick." changes topic to '".@substr($kk[3], 1)."'");
 }
 if ($exp[1] == "NICK") {
-	foreach ($channeluser as $chan => $users) { 
-		foreach ($users as $id => $user) { 
-			if ($user == $nick) { 
-				$ni = @substr($exp[2], 1);
-				create_log($chan,"[".@date("H:i")."] *** ".$nick." is now known as ".$ni);
-				who($chan, "2");
-			}
-		} 
+	if($nick == $botnick OR $nick == $botnick."|ZNC"){
+	}else{
+		foreach ($channeluser as $chan => $users) { 
+			foreach ($users as $id => $user) { 
+				if ($user == $nick) { 
+					$ni = @substr($exp[2], 1);
+					create_log($chan,"[".@date("H:i")."] *** ".$nick." is now known as ".$ni);
+					who($chan, "2");
+				}
+			} 
+		}
 	}
 }
 if ($exp[1] == "QUIT") {
-	foreach ($channeluser as $chan => $users) { 
-		foreach ($users as $id => $user) { 
-			if ($user == $nick) { 
-				create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") Quit (".@substr($exp[2], 1).")");
-				who($chan, "2");
-			}
-		} 
+	if($nick == $botnick OR $nick == $botnick."|ZNC"){
+	}else{
+		foreach ($channeluser as $chan => $users) { 
+			foreach ($users as $id => $user) { 
+				if ($user == $nick) { 
+					create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") Quit (".@substr($exp[2], 1).")");
+					who($chan, "2");
+				}
+			} 
+		}
 	}
 }
 ?>
