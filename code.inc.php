@@ -33,6 +33,7 @@ if ($exp[1] == "315") {
 			$channeluser[$target][$i] = $unick;
 		}
 		unset($users);
+		unset($i);
 	}
 }
 if ($exp[1] == "PRIVMSG") {
