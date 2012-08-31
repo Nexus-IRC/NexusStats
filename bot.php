@@ -186,11 +186,10 @@ function create_conf ($channel = null, $lang = null) {
 				$text4  = "Format = 'mIRC'\n";
 				$text5  = "Lang = '".$lang."'\n";
 				$text6  = "DailyActivity = '31'\n";	
-				$text7  = "NickTracking = '1'\n";			
-				$text8  = "Network= '".$network."'\n";
-				$text9  = "Maintainer = '".$botnick."'\n";
-				$text10  = "OutputFile = '".$statsdir.$cha.".php'\n";
-				$text11 = "</channel>\n";
+				$text7  = "Network= '".$network."'\n";
+				$text8  = "Maintainer = '".$botnick."'\n";
+				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
+				$text10 = "</channel>\n";
 				$dateiname = $cfgdir.$cha.".cfg"; 
 				$handler = fOpen($dateiname , "a+");
 				fWrite($handler , $text1);
@@ -203,7 +202,6 @@ function create_conf ($channel = null, $lang = null) {
 				fWrite($handler , $text8);
 				fWrite($handler , $text9);
 				fWrite($handler , $text10);
-				fWrite($handler , $text11);
 				fClose($handler);
 				send_debug("Config for channel ".$channel." createt");
 			}else{
@@ -215,11 +213,10 @@ function create_conf ($channel = null, $lang = null) {
 				$text4  = "Format = 'mIRC'\n";
 				$text5  = "Lang = 'EN'\n";
 				$text6  = "DailyActivity = '31'\n";	
-				$text7  = "NickTracking = '1'\n";		
-				$text8  = "Network= '".$network."'\n";
-				$text9  = "Maintainer = '".$botnick."'\n";
-				$text10  = "OutputFile = '".$statsdir.$cha.".php'\n";
-				$text11 = "</channel>\n";
+				$text7  = "Network= '".$network."'\n";
+				$text8  = "Maintainer = '".$botnick."'\n";
+				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
+				$text10 = "</channel>\n";
 				$dateiname = $cfgdir.$cha.".cfg"; 
 				$handler = fOpen($dateiname , "a+");
 				fWrite($handler , $text1);
@@ -232,7 +229,6 @@ function create_conf ($channel = null, $lang = null) {
 				fWrite($handler , $text8);
 				fWrite($handler , $text9);
 				fWrite($handler , $text10);
-				fWrite($handler , $text11);
 				fClose($handler);
 				send_debug("Config for channel ".$channel." createt");
 			}
@@ -247,11 +243,10 @@ function create_conf ($channel = null, $lang = null) {
 			$text4  = "Format = 'mIRC'\n";
 			$text5  = "Lang = '".$row['Lang']."'\n";
 			$text6  = "DailyActivity = '31'\n";	
-			$text7  = "NickTracking = '1'\n";
-			$text8  = "Network= '".$network."'\n";
-			$text9  = "Maintainer = '".$botnick."'\n";
-			$text10  = "OutputFile = '".$statsdir.substr($row['Name'], 1).".php'\n";
-			$text11 = "</channel>\n";
+			$text7  = "Network= '".$network."'\n";
+			$text8  = "Maintainer = '".$botnick."'\n";
+			$text9  = "OutputFile = '".$statsdir.substr($row['Name'], 1).".php'\n";
+			$text10 = "</channel>\n";
 			$dateiname = $cfgdir.substr($row['Name'], 1).".cfg"; 
 			$handler = fOpen($dateiname , "a+");
 			fWrite($handler , $text1);
@@ -264,7 +259,6 @@ function create_conf ($channel = null, $lang = null) {
 			fWrite($handler , $text8);
 			fWrite($handler , $text9);
 			fWrite($handler , $text10);
-			fWrite($handler , $text11);
 			fClose($handler);
 		}
 		send_debug("Config for all channels createt");
