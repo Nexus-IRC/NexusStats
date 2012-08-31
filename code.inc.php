@@ -201,11 +201,15 @@ if ($exp[1] == "PRIVMSG") {
 					$kk2 = explode(" ",$fg,4);
 					$act2 = explode(" ",@substr($kk2[3], 1),2);
 					$goo=from_google($act2[1]);
-					privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][0]['titleNoFormatting'] . " => " . $goo['responseData']['results'][0]['url']);
-					privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][1]['titleNoFormatting'] . " => " . $goo['responseData']['results'][1]['url']);
-					privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][2]['titleNoFormatting'] . " => " . $goo['responseData']['results'][2]['url']);
-					privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][3]['titleNoFormatting'] . " => " . $goo['responseData']['results'][3]['url']);
-					privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][4]['titleNoFormatting'] . " => " . $goo['responseData']['results'][4]['url']);
+					if(isset($goo['responseData']['results'][0]['titleNoFormatting'])){
+						privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][0]['titleNoFormatting'] . " => " . $goo['responseData']['results'][0]['url']);
+						privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][1]['titleNoFormatting'] . " => " . $goo['responseData']['results'][1]['url']);
+						privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][2]['titleNoFormatting'] . " => " . $goo['responseData']['results'][2]['url']);
+						privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][3]['titleNoFormatting'] . " => " . $goo['responseData']['results'][3]['url']);
+						privmsg($exp[2],"\002Google\002: ".$goo['responseData']['results'][4]['titleNoFormatting'] . " => " . $goo['responseData']['results'][4]['url']);
+					}else{
+						privmsg($exp[2],"\002Google\002: Es wurden keine mit Ihrer Suchanfrage - ".$act2[1]." - übereinstimmenden Dokumente gefunden.");
+					}
 				}
 				break;
 		}
