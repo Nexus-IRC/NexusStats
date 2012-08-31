@@ -230,6 +230,7 @@ if ($exp[1] == "INVITE") {
 		if($row2['Name'] == $chan){
 			putSocket("join ".$exp[3]);
 			who($exp[3], "2");
+			send_debug("join ".$exp[3]);
 		}else{
 			create_chan($exp[3]);
 			who($exp[3], "2");
