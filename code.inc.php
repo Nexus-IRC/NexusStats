@@ -87,12 +87,16 @@ if ($exp[1] == "PRIVMSG") {
 			case $trigger."reg":
 				if($host[1] == $admin){
 					if($exp[4]){
-						$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$exp[4]."' AND `Noreg` = '1'");
-						$row = mysql_fetch_array($a);
-						if($row['Name'] == $exp[4]){
-							notice($nick,"The Channel: ".$exp[4]." is on the not register list.");
-						} else {						
-							create_chan($exp[4]);
+						if(strtolower($exp[5])=="force"){
+							create_chan($exp[4],true);
+						}else{
+							$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$exp[4]."' AND `Noreg` = '1'");
+							$row = mysql_fetch_array($a);
+							if($row['Name'] == $exp[4]){
+								notice($nick,"The Channel: ".$exp[4]." is on the not register list.");
+							} else {						
+								create_chan($exp[4]);
+							}
 						}
 					}else{
 						notice($nick,"You must enter a channel name");

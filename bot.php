@@ -136,13 +136,23 @@ function create_noreg ($channel, $nick) {
 	}
 }
 
-function create_chan ($channel) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
-	$cha = @substr($channel, 1);
-	mysql_send_query("INSERT INTO `Channel` (`ID` ,`Name` ,`Lang` ,`Noreg` ) VALUES (NULL , '".$channel."', '".$defaultlang."', '0');");
-	putSocket("join ".$channel);
-	create_conf($channel);
-	send_debug("Add channel ".$channel);
+function create_chan ($channel, $force=null) {
+	if(isset($force)){
+		global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
+		$cha = @substr($channel, 1);
+		mysql_send_query("DELETE FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '1'");
+		mysql_send_query("INSERT INTO `Channel` (`ID` ,`Name` ,`Lang` ,`Noreg` ) VALUES (NULL , '".$channel."', '".$defaultlang."', '0');");
+		putSocket("join ".$channel);
+		create_conf($channel);
+		send_debug("Add channel ".$channel);
+	}else{
+		global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
+		$cha = @substr($channel, 1);
+		mysql_send_query("INSERT INTO `Channel` (`ID` ,`Name` ,`Lang` ,`Noreg` ) VALUES (NULL , '".$channel."', '".$defaultlang."', '0');");
+		putSocket("join ".$channel);
+		create_conf($channel);
+		send_debug("Add channel ".$channel);
+	}
 }
 
 function set_lang ($chan, $lang = null) {
