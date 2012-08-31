@@ -575,7 +575,34 @@ function mysql_send_query ($data) {
 	$return = mysql_query($data, $connect) or die(mysql_error());
 	return $return;
 }
-
+function object_to_array($data) // Converts a Nested stdObject to a full associative Array
+{ // Not used everywhere, because found this solution much later
+    if(is_array($data) || is_object($data)) //
+    {
+        $result = array();
+        foreach($data as $key => $value)
+        {
+            $result[$key] = object_to_array($value);
+        }
+        return $result;
+    }
+    return $data;
+} 
+function from_google($query){
+    $query=urlencode($query);
+    $array=array();
+    $url = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&"
+    . "q=" . $query . "&rsz=large";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_REFERER, "http://forums.com");
+    $body = curl_exec($ch);
+    curl_close($ch);
+    $json = json_decode($body);
+    $array = object_to_array($json);
+	return $array;
+} 
 function putSocket ($line) {
     echo(">>$line\n");
     flush();

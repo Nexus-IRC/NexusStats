@@ -196,6 +196,14 @@ if ($exp[1] == "PRIVMSG") {
 				putSocket("NOTICE $nick :\002Parser             \002:     ".PHP_VERSION);
 				putSocket("NOTICE $nick :\002Code               \002:     ".$codelines." lines PHP code (view it at http://git.nexus-irc.de/?p=NexusStats.git)");          
 				break;
+			case $trigger."google":
+				$goo=from_google($exp[4]);
+				privmsg($exp[2],$goo['responseData']['results'][0]['titleNoFormatting'] . " => " . $goo['responseData']['results'][0]['url']);
+				privmsg($exp[2],$goo['responseData']['results'][1]['titleNoFormatting'] . " => " . $goo['responseData']['results'][1]['url']);
+				privmsg($exp[2],$goo['responseData']['results'][2]['titleNoFormatting'] . " => " . $goo['responseData']['results'][2]['url']);
+				privmsg($exp[2],$goo['responseData']['results'][3]['titleNoFormatting'] . " => " . $goo['responseData']['results'][3]['url']);
+				privmsg($exp[2],$goo['responseData']['results'][4]['titleNoFormatting'] . " => " . $goo['responseData']['results'][4]['url']);
+				break;
 		}
 	}
 }
