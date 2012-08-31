@@ -581,19 +581,18 @@ function mysql_send_query ($data) {
 	$return = mysql_query($data, $connect) or die(mysql_error());
 	return $return;
 }
-function object_to_array($data) // Converts a Nested stdObject to a full associative Array
-{ // Not used everywhere, because found this solution much later
-    if(is_array($data) || is_object($data)) //
-    {
+
+function object_to_array($data) {
+    if(is_array($data) || is_object($data)) {
         $result = array();
-        foreach($data as $key => $value)
-        {
+        foreach($data as $key => $value) {
             $result[$key] = object_to_array($value);
         }
         return $result;
     }
     return $data;
 } 
+
 function from_google($query){
     $query=urlencode($query);
     $array=array();
