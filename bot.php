@@ -109,8 +109,11 @@ function create_log ($channel, $data) {
 		$row2 = mysql_fetch_array($b);
 		if($row2['Name'] == $channel){
 			$cha = @substr($channel, 1);
-			$inhalt = file_get_contents($logdir.$cha.".log");
-			file_put_contents($logdir.$cha.".log", $inhalt .= $data."\n");
+			$text1  = $data."\n";
+			$dateiname = $logdir.$cha.".cfg"; 
+			$handler = fOpen($dateiname , "a+");
+			fWrite($handler , $text1);
+			fClose($handler);			
 		}else{ 
 		}
 	}
@@ -120,8 +123,11 @@ function create_log ($channel, $data) {
 function create_debug_log ($data) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $debuglog;
 	$datei = $debuglog;
-	$inhalt = file_get_contents($datei);
-	file_put_contents($datei, $inhalt .= date("d.m.y")." ".date("H:i:s").": ".$data."\n");
+	$text1  = date("d.m.y")." ".date("H:i:s").": ".$data."'";
+	$dateiname = $datei; 
+	$handler = fOpen($dateiname , "a+");
+	fWrite($handler , $text1);
+	fClose($handler);				
 }
  
 function create_noreg ($channel, $nick) {
