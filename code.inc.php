@@ -216,6 +216,15 @@ if ($exp[1] == "PRIVMSG") {
 					}
 				}
 				break;
+			case $trigger."8ball":
+				if(isset($exp[4])){
+					$answer=array("Not a chance.","In your dreams.","Absolutely!","Could be, could be.","No!");
+					$rand=array_rand($answer);
+					privmsg($exp[2],$answer[$rand]);
+				}else{
+					notice($nick,"8ball requires more parameters.");
+				}
+				break;
 		}
 	}
 }
