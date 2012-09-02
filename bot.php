@@ -198,18 +198,6 @@ function set_lang ($chan, $lang = null) {
 	}
 }
 
-function debugsendlog($chan=null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick, $network;
-	if(isset($chan)){//optional
-		create_log($chan, "[".@date("H:i")."] <".$botnick."> send a log text to create logfiles");
-	}else{
-		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
-		while ( $row = mysql_fetch_array($result) ){
-			create_log($row['Name'], "[".@date("H:i")."] <".$botnick."> send a log text to create logfiles");
-		}
-	}
-}
-
 function create_conf ($channel = null, $lang = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick, $network;
 	if(isset($channel)){//optional
@@ -345,19 +333,19 @@ function create_stats ($chan = null) {
 			privmsg($chan,"Stats Update: ".$url.$cha);
 			send_debug("Stats createt ".$chan);
 		}
-	}else{	
+	}else{
 		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
 		while ( $row = mysql_fetch_array($result) ){
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.substr($row['Name'], 1).".cfg\n");
 			privmsg($row['Name'],"Stats Update: ".$url.substr($row['Name'], 1));
 		}
-		#create_timer("12h","stats");
 		send_debug("Stats createt");
+		create_timer("12h","stats");
 	}
 }
 
 function reset_stats ($chan = null) {
-	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
+	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick;
 	if(isset($chan)){ //optional
 		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '0'");
 		$row = mysql_fetch_array($a);
@@ -368,7 +356,7 @@ function reset_stats ($chan = null) {
 			copy($statsdir.substr($chan, 1).".php", $archivdir.substr($chan, 1).".php");
 			@unlink($statsdir.substr($chan, 1).".php");
 			privmsg($chan,"Stats Reset, Archiv: ".$aurl.substr($chan, 1));
-			debugsendlog($chan);
+			create_log($chan, "[".@date("H:i")."] <".$botnick."> send a log text to create logfiles");
 			create_stats($chan);
 			send_debug("Stats resetet ".$chan);
 		}
@@ -382,11 +370,11 @@ function reset_stats ($chan = null) {
 			copy($statsdir.substr($row['Name'], 1).".php", $archivdir.substr($row['Name'], 1).".php");
 			@unlink($statsdir.substr($row['Name'], 1).".php");
 			privmsg($row['Name'],"Stats Reset, Archiv: ".$aurl.substr($row['Name'], 1));
-			debugsendlog($chan);
+			create_log($row['Name'], "[".@date("H:i")."] <".$botnick."> send a log text to create logfiles");
 			create_stats($row['Name']);
 		}
-		create_timer("24h","stats");
 		send_debug("Stats resetet");
+		create_timer("24h","stats");
 	}
 }
 
