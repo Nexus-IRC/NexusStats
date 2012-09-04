@@ -154,7 +154,7 @@ function create_noreg ($channel, $nick) {
 }
 
 function create_chan ($channel, $force=null) {
-	if(isset($force)){
+	if(isset($force)){ //optional
 		global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 		$cha = @substr($channel, 1);
 		mysql_send_query("DELETE FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '1'");
@@ -174,7 +174,7 @@ function create_chan ($channel, $force=null) {
 
 function set_lang ($chan, $lang = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
-	if(isset($lang)){	
+	if(isset($lang)){ //optional
 		$cha = @substr($chan, 1);
 		if (file_exists($cfgdir.$cha.".cfg")) {
 			create_conf($chan, $lang);
@@ -193,7 +193,6 @@ function set_lang ($chan, $lang = null) {
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
 			privmsg($chan,"Stats Update: ".$url.$cha);	
 			send_debug("Language for channel ".$chan." changed to ".$defaultlang);
-		}else{
 		}
 	}
 }
@@ -301,7 +300,7 @@ function del_chan ($channel, $noreg=null) {
 		@unlink($cfgdir.$cha.".cfg");
 		@unlink($logdir.$cha.".log");
 		@unlink($statsdir.$cha.".php");
-		if(isset($noreg)){
+		if(isset($noreg)){ //optional
 		}else{
 			mysql_send_query("DELETE FROM `Channel` WHERE `Name` = '".$channel."'");
 		}
@@ -311,13 +310,21 @@ function del_chan ($channel, $noreg=null) {
 	}
 }
 
-function check_stats () {
+function check_stats ($chan = null) {
 	$reset = array("01.01","01.02","01.03","01.04","01.05","01.06","01.07","01.08","01.09","01.10","01.11","01.12");
 	$stamp = time();
-	if(in_array(date("d.m",$stamp), $reset)){
-		reset_stats();
+	if(isset($chan)){ //optional
+		if(in_array(date("d.m",$stamp), $reset)){
+			reset_stats($chan);
+		}else{
+			create_stats($chan);
+		}
 	}else{
-		create_stats();
+		if(in_array(date("d.m",$stamp), $reset)){
+			reset_stats();
+		}else{
+			create_stats();
+		}
 	}
 }
 

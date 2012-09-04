@@ -73,6 +73,9 @@ if ($exp[1] == "PRIVMSG") {
 			case $trigger."stats":				
 				create_stats($exp[2]);
 				break;
+			case $trigger."checkstats":
+				check_stats($exp[2]);
+				break;
 			case $trigger."unreg":
 				if($host[1] == $admin){
 					if($exp[4]){
