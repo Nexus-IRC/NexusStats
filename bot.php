@@ -215,7 +215,15 @@ function create_conf ($channel = null, $lang = null) {
 				$text7  = "Network= '".$network."'\n";
 				$text8  = "Maintainer = '".$botnick."'\n";
 				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
-				$text10 = "</channel>\n";
+				$text10 = "Charset='utf-8'\n";
+				$text11 = "NickTracking='1'\n";
+				$text12 = "ActiveNicks2='50'\n";
+				$text13 = "ShowSmileys='1'\n";
+				$text14 = "ShowWpl='1'\n";
+				$text15 = "ShowLegend='1'\n";
+				$text16 = "ShowMostNicks='1'\n";
+				$text17 = "ShowActiveGenders='1'\n";
+				$text18 = "</channel>\n";
 				$dateiname = $cfgdir.$cha.".cfg"; 
 				$handler = fOpen($dateiname , "a+");
 				fWrite($handler , $text1);
@@ -228,8 +236,16 @@ function create_conf ($channel = null, $lang = null) {
 				fWrite($handler , $text8);
 				fWrite($handler , $text9);
 				fWrite($handler , $text10);
+				fWrite($handler , $text11);
+				fWrite($handler , $text12);
+				fWrite($handler , $text13);
+				fWrite($handler , $text14);
+				fWrite($handler , $text15);
+				fWrite($handler , $text16);
+				fWrite($handler , $text17);
+				fWrite($handler , $text18);
 				fClose($handler);
-				send_debug("Config for channel ".$channel." createt");
+				send_debug("Config for channel ".$channel." created");
 			}else{
 				$cha = @substr($channel, 1);
 				@unlink($cfgdir.$cha.".cfg");
@@ -242,7 +258,15 @@ function create_conf ($channel = null, $lang = null) {
 				$text7  = "Network= '".$network."'\n";
 				$text8  = "Maintainer = '".$botnick."'\n";
 				$text9  = "OutputFile = '".$statsdir.$cha.".php'\n";
-				$text10 = "</channel>\n";
+				$text10 = "Charset='utf-8'\n";
+				$text11 = "NickTracking='1'\n";
+				$text12 = "ActiveNicks2='50'\n";
+				$text13 = "ShowSmileys='1'\n";
+				$text14 = "ShowWpl='1'\n";
+				$text15 = "ShowLegend='1'\n";
+				$text16 = "ShowMostNicks='1'\n";
+				$text17 = "ShowActiveGenders='1'\n";
+				$text18 = "</channel>\n";
 				$dateiname = $cfgdir.$cha.".cfg"; 
 				$handler = fOpen($dateiname , "a+");
 				fWrite($handler , $text1);
@@ -255,8 +279,16 @@ function create_conf ($channel = null, $lang = null) {
 				fWrite($handler , $text8);
 				fWrite($handler , $text9);
 				fWrite($handler , $text10);
+				fWrite($handler , $text11);
+				fWrite($handler , $text12);
+				fWrite($handler , $text13);
+				fWrite($handler , $text14);
+				fWrite($handler , $text15);
+				fWrite($handler , $text16);
+				fWrite($handler , $text17);
+				fWrite($handler , $text18);
 				fClose($handler);
-				send_debug("Config for channel ".$channel." createt");
+				send_debug("Config for channel ".$channel." created");
 			}
 		}
 	}else{
@@ -272,7 +304,15 @@ function create_conf ($channel = null, $lang = null) {
 			$text7  = "Network= '".$network."'\n";
 			$text8  = "Maintainer = '".$botnick."'\n";
 			$text9  = "OutputFile = '".$statsdir.substr($row['Name'], 1).".php'\n";
-			$text10 = "</channel>\n";
+			$text10 = "Charset='utf-8'\n";
+			$text11 = "NickTracking='1'\n";
+			$text12 = "ActiveNicks2='50'\n";
+			$text13 = "ShowSmileys='1'\n";
+			$text14 = "ShowWpl='1'\n";
+			$text15 = "ShowLegend='1'\n";
+			$text16 = "ShowMostNicks='1'\n";
+			$text17 = "ShowActiveGenders='1'\n";
+			$text18 = "</channel>\n";
 			$dateiname = $cfgdir.substr($row['Name'], 1).".cfg"; 
 			$handler = fOpen($dateiname , "a+");
 			fWrite($handler , $text1);
@@ -285,9 +325,17 @@ function create_conf ($channel = null, $lang = null) {
 			fWrite($handler , $text8);
 			fWrite($handler , $text9);
 			fWrite($handler , $text10);
+			fWrite($handler , $text11);
+			fWrite($handler , $text12);
+			fWrite($handler , $text13);
+			fWrite($handler , $text14);
+			fWrite($handler , $text15);
+			fWrite($handler , $text16);
+			fWrite($handler , $text17);
+			fWrite($handler , $text18);
 			fClose($handler);
 		}
-		send_debug("Config for all channels createt");
+		send_debug("Config for all channels created");
 	}
 }
 
@@ -338,7 +386,7 @@ function create_stats ($chan = null) {
 			@unlink($statsdir.$cha.".php");
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
 			privmsg($chan,"Stats Update: ".$url.$cha);
-			send_debug("Stats createt ".$chan);
+			send_debug("Stats created ".$chan);
 		}
 	}else{
 		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
@@ -346,7 +394,7 @@ function create_stats ($chan = null) {
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.substr($row['Name'], 1).".cfg\n");
 			privmsg($row['Name'],"Stats Update: ".$url.substr($row['Name'], 1));
 		}
-		send_debug("Stats createt");
+		send_debug("Stats created");
 		create_timer("12h","stats");
 	}
 }
