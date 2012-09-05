@@ -20,6 +20,7 @@ if ($exp[1] == "354") {
 		$users[] = $exp[4];
 	}
 }
+
 if ($exp[1] == "315") {
 	$x = explode(",",$exp[3]);
 	$target = $x[0];
@@ -35,6 +36,7 @@ if ($exp[1] == "315") {
 		unset($i);
 	}
 }
+
 if ($exp[1] == "PRIVMSG") {
 	$kk = explode(" ",$fg,4);
 	$act = explode(" ",@substr($kk[3], 1),2);
@@ -65,19 +67,17 @@ if ($exp[1] == "PRIVMSG") {
 		}
 	}
 	
-	
 	if ($exp[2][0] != "#") {
-		
 		switch($command) {
 			case "raw":
-				if(strtolower($host[1]) == strtolower("NeonServ.bot.krypton-bouncer.de")){
+				if(in_array($host[1],$rawallow)){
 					if(strtolower($exp[4]) == strtolower("part")){
 						putSocket("part ".$exp[5]);
-						send_debug("NeonServ part ".$exp[5]);
+						send_debug($nick." part ".$exp[5]);
 					}				
 					if(strtolower($exp[4]) == strtolower("join")){
 						putSocket("join ".$exp[5]);
-						send_debug("NeonServ join ".$exp[5]);
+						send_debug($nick." join ".$exp[5]);
 					}
 				}				
 				break;
@@ -243,6 +243,7 @@ if ($exp[1] == "PRIVMSG") {
 		}
 	}
 }
+
 if ($exp[1] == "INVITE") {
 	if($exp[3][0] == ":") {
 		$chan = @substr($exp[3], 1);
@@ -265,6 +266,7 @@ if ($exp[1] == "INVITE") {
 		}
 	}
 }
+
 if ($exp[1] == "JOIN") {
 	if($nick == $botnick OR $nick == $botnick."|ZNC") {
 	}else{
@@ -280,6 +282,7 @@ if ($exp[1] == "JOIN") {
 		who($chan, "2");
 	}
 }
+
 if ($exp[1] == "PART") {
 	if($nick == $botnick OR $nick == $botnick."|ZNC") {
 	}else{
@@ -295,6 +298,7 @@ if ($exp[1] == "PART") {
 		who($chan, "2");
 	}
 }
+
 if ($exp[1] == "MODE") {
 	$cha = @substr($exp[2], 1);
 	if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
@@ -302,6 +306,7 @@ if ($exp[1] == "MODE") {
 		create_log($cha,"[".@date("H:i")."] *** ".$nick." sets mode: ".$exp[3]." ".$exp[4]);
 	}
 }
+
 if ($exp[1] == "KICK") {
 	if($exp[3] == $botnick OR $exp[3] == $botnick."|ZNC") {
 		del_chan($exp[2], false);
@@ -319,11 +324,13 @@ if ($exp[1] == "KICK") {
 		who($chan, "2");
 	}
 }
+
 if ($exp[1] == "TOPIC") {
 	$cha = @substr($exp[2], 1);
 	$kk = explode(" ",$fg,4);
 	create_log($exp[2],"[".@date("H:i")."] *** ".$nick." changes topic to '".@substr($kk[3], 1)."'");
 }
+
 if ($exp[1] == "NICK") {
 	if($nick == $botnick OR $nick == $botnick."|ZNC"){
 	}else{
@@ -338,6 +345,7 @@ if ($exp[1] == "NICK") {
 		}
 	}
 }
+
 if ($exp[1] == "QUIT") {
 	if($nick == $botnick OR $nick == $botnick."|ZNC"){
 	}else{
