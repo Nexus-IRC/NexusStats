@@ -67,6 +67,21 @@ if ($exp[1] == "PRIVMSG") {
 	
 	
 	if ($exp[2][0] != "#") {
+		
+		switch($command) {
+			case "raw":
+				if(strtolower($host[1]) == strtolower("NeonServ.bot.krypton-bouncer.de")){
+					if(strtolower($exp[4]) == strtolower("part")){
+						putSocket("part ".$exp[5]);
+						send_debug("NeonServ part ".$exp[5]);
+					}				
+					if(strtolower($exp[4]) == strtolower("join")){
+						putSocket("join ".$exp[5]);
+						send_debug("NeonServ join ".$exp[5]);
+					}
+				}				
+				break;
+		}
 	} else 
 	{
 		switch($command) {
