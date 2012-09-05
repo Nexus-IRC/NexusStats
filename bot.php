@@ -124,8 +124,6 @@ function create_log ($channel, $data) {
 	}
 }
 
-
-
 function create_debug_log ($data) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $debuglog;
 	$datei = $debuglog;
@@ -627,23 +625,14 @@ function send_debug ($data, $channel = null){
 	}
 }
 
-function check_version ($nick = null) {
+function check_version ($nick) {
 	global $gitversion;
-	if(isset($nick)){
-		if($gitversion) {
-			$version = file_get_contents("http://git.nexus-irc.de/git_version.php?git=NexusStats.git");
-			if($gitversion != $version) {
-				notice($nick, "[UPDATE] There is an version update available on http://git.nexus-irc.de/?p=NexusStats.git");
-			}else{
-				notice($nick, "no update available");
-			}
-		}
-	}else{
-		if($gitversion) {
-			$version = file_get_contents("http://git.nexus-irc.de/git_version.php?git=NexusStats.git");
-			if($gitversion != $version) {
-				return "[UPDATE] There is an version update available on http://git.nexus-irc.de/?p=NexusStats.git";
-			}
+	if($gitversion) {
+		$version = file_get_contents("http://git.nexus-irc.de/git_version.php?git=NexusStats.git");
+		if($gitversion != $version) {
+			notice($nick, "[UPDATE] There is an version update available on http://git.nexus-irc.de/?p=NexusStats.git");
+		}else{
+			notice($nick, "no update available");
 		}
 	}
 }

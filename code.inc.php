@@ -192,9 +192,6 @@ if ($exp[1] == "PRIVMSG") {
 				notice($nick, " Ultrashadow  (testing and ideas)");
 				notice($nick, " pk910        (ideas)");
 				notice($nick, " Calisto      (ideas)");
-				if($gitversion) {
-					notice($nick,check_version());
-				}
 				break;
 			case $trigger."checkversion":
 				if($host[1] == $admin){
