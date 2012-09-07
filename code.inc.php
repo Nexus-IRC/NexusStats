@@ -309,7 +309,7 @@ if ($exp[1] == "MODE") {
 
 if ($exp[1] == "KICK") {
 	if($exp[3] == $botnick OR $exp[3] == $botnick."|ZNC") {
-		del_chan($exp[2], false);
+		del_chan($exp[2]);
 	}else{
 		if($exp[2][0] == ":") {
 			$cha2 = @substr($exp[2], 1);

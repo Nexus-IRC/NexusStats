@@ -145,8 +145,7 @@ function create_noreg ($channel, $nick) {
 	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$channel."' AND `Noreg` = '0'");
 	$row = mysql_fetch_array($a);
 	if($row['Name'] == $channel){
-		mysql_send_query("UPDATE `Channel` SET `Noreg` = '1' WHERE `Name` = '".$channel."'");
-		del_chan ($channel, true);
+		del_chan($channel, true);
 		putSocket("PART ".$channel." :Unregistered by ".$nick.".");
 		send_debug("Add ".$channel." to the no register list");
 	}
@@ -336,6 +335,7 @@ function del_chan ($channel, $noreg=null) {
 		@unlink($logdir.$cha.".log");
 		@unlink($statsdir.$cha.".php");
 		if(isset($noreg)){ //optional
+			mysql_send_query("UPDATE `Channel` SET `Noreg` = '1' WHERE `Name` = '".$channel."'");
 		}else{
 			mysql_send_query("DELETE FROM `Channel` WHERE `Name` = '".$channel."'");
 		}
