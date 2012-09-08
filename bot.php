@@ -616,7 +616,18 @@ function from_google($query){
     $json = json_decode($body);
     $array = object_to_array($json);
 	return $array;
-} 
+}
+
+function git ($nick) {
+	$a=str_replace('\r', '',str_replace('\n', '', file_get_contents("http://git.nexus-irc.de/git_v.php?git=NexusStats.git")));
+	$b=explode("<br>",$a);
+	notice($nick,$b[0]);
+	notice($nick,$b[1]);
+	notice($nick,$b[2]);
+	notice($nick,$b[3]);
+	notice($nick,$b[4]);
+}
+
 function putSocket ($line) {
     echo(">>$line\n");
     flush();

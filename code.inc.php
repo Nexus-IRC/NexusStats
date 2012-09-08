@@ -222,6 +222,9 @@ if ($exp[1] == "PRIVMSG") {
 					notice($nick,"8ball requires more parameters.");
 				}
 				break;
+			case $trigger."git":
+				git($nick);
+				break;
 		}
 	}
 }
