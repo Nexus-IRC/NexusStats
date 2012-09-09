@@ -35,6 +35,8 @@ $stime = time();
 $fgr = "";
 $channeluser=array();
 $glob=array();
+$phpcache=array();
+$ccache=array();
 $connect = mysql_connect($mysql_host, $mysql_user, $mysql_pw);
 $rawallow=array("NeonServ.bot.krypton-bouncer.de","Stricted2.user.OnlineGamesNet");
 $db = mysql_select_db($mysql_db, $connect);
@@ -64,6 +66,18 @@ while (true) {
             }
         }
     }
+	foreach($ccache as $id => $c) {
+		if(!$checkcstate($c)) {
+			unlink("tmp/debug_".$c['id'].".c");
+			unlink("tmp/debug_".$c['id']);
+			unset($ccache[$id]);
+		}
+	}
+	foreach($phpcache as $id => $php) {
+		if(!$checkphpstate($php)) {
+			unset($phpcache[$id]);
+		}
+	}
     usleep(1000);
     while ($fg = fgets($socket)) {
 		$glob['dat_in'] = $glob['dat_in'] + strlen($fg);
@@ -672,6 +686,130 @@ function git ($nick) {
 	notice($nick,$b[4]);
 }
 
+function checkphpstate($php) {
+	$data = proc_get_status($php['proc']);
+	if(!$data['running']) {
+		$out="";
+		while(!feof($php['pipes'][1])) {
+			$out .= fgets($php['pipes'][1], 128);
+		}
+		$eout="";
+		while(!feof($php['pipes'][2])) {
+			$eout .= fgets($php['pipes'][2], 128);
+		}
+		if($out != "") {
+			$out=str_replace("\r","",$out);
+			$lines=explode("\n",$out);
+			$i=0;
+			foreach($lines as $line) {
+				$i++;
+				if($i>1000) {
+					privmsg($php['channel'], "too many lines!");
+					break; 
+				}
+				privmsg($php['channel'], $line);
+			}
+		}
+		if($eout != "") {
+			$eout=str_replace("\r","",$eout);
+			$lines=explode("\n",$eout);
+			$i=0;
+			foreach($lines as $line) {
+				$i++;
+				if($i>1000) { 
+					privmsg($php['channel'], "too many lines!");
+					break; 
+				}
+				privmsg($php['channel'], "4".$line."");
+			}
+		}
+		fclose($php['pipes'][1]);
+		fclose($php['pipes'][2]);
+		proc_close($php['proc']);
+		return false;
+	} else {
+		if($php['time']+10 > time()) {
+			return true;
+		} else {
+			//TIMEOUT
+			if($php['term']) {
+				fclose($php['pipes'][1]);
+				fclose($php['pipes'][2]);
+				proc_terminate($php['proc'],9);
+				privmsg($php['channel'], "php hard timeout. sending SIGKILL");
+				return false;
+			} else {
+				proc_terminate($php['proc']);
+				$php['term']=true;
+				privmsg($php['channel'], "php timeout. (maximum of 10 seconds exceeded)  sending SIGTERM"); 
+				return true;
+			}
+		}
+	}
+}
+function checkcstate($c) {
+	$data = proc_get_status($c['proc']);
+	if(!$data['running']) {
+		$out="";
+		while(!feof($c['pipes'][1])) {
+			$out .= fgets($c['pipes'][1], 128);
+		}
+		$eout="";
+		while(!feof($c['pipes'][2])) {
+			$eout .= fgets($c['pipes'][2], 128);
+		}
+		if($out != "") {
+			$out=str_replace("\r","",$out);
+			$lines=explode("\n",$out);
+			$i=0;
+			foreach($lines as $line) {
+				if($line == "") continue;
+				$i++;
+				if($i>1000) {
+					$this->uplink->privmsg($this->c, $c['channel'], "too many lines!");
+					break; 
+				}
+				$this->uplink->privmsg($this->c, $c['channel'], $line);
+			}
+		}
+		if($eout != "") {
+			$eout=str_replace("\r","",$eout);
+			$lines=explode("\n",$eout);
+			$i=0;
+			foreach($lines as $line) {
+				if($line == "") continue;
+				$i++;
+				if($i>1000) { 
+					$this->uplink->privmsg($this->c, $c['channel'], "too many lines!");
+					break; 
+				}
+				$this->uplink->privmsg($this->c, $c['channel'], "4".$line."");
+			}
+		}
+		fclose($c['pipes'][1]);
+		fclose($c['pipes'][2]);
+		proc_close($c['proc']);
+		return false;
+	} else {
+		if($c['time']+10 > time()) {
+			return true;
+		} else {
+			//TIMEOUT
+			if($c['term']) {
+				fclose($c['pipes'][1]);
+				fclose($c['pipes'][2]);
+				proc_terminate($c['proc'],9);
+				$this->uplink->privmsg($this->c, $c['channel'], "c hard timeout. sending SIGKILL");
+				return false;
+			} else {
+				proc_terminate($c['proc']);
+				$c['term']=true;
+				$this->uplink->privmsg($this->c, $c['channel'], "c timeout. (maximum of 10 seconds exceeded)  sending SIGTERM"); 
+				return true;
+			}
+		}
+	}
+}
 function putSocket ($line) {
     echo(">>$line\n");
     flush();
