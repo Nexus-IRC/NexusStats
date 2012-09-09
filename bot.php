@@ -716,7 +716,7 @@ function checkphpstate($php) {
 			$i=0;
 			foreach($lines as $line) {
 				$i++;
-				if($i>1000) { 
+				if($i>1000) {
 					privmsg($php['channel'], "too many lines!");
 					break; 
 				}
@@ -766,10 +766,10 @@ function checkcstate($c) {
 				if($line == "") continue;
 				$i++;
 				if($i>1000) {
-					$this->uplink->privmsg($this->c, $c['channel'], "too many lines!");
+					privmsg($c['channel'], "too many lines!");
 					break; 
 				}
-				$this->uplink->privmsg($this->c, $c['channel'], $line);
+				privmsg($c['channel'], $line);
 			}
 		}
 		if($eout != "") {
@@ -780,10 +780,10 @@ function checkcstate($c) {
 				if($line == "") continue;
 				$i++;
 				if($i>1000) { 
-					$this->uplink->privmsg($this->c, $c['channel'], "too many lines!");
+					privmsg($c['channel'], "too many lines!");
 					break; 
 				}
-				$this->uplink->privmsg($this->c, $c['channel'], "4".$line."");
+				privmsg($c['channel'], "4".$line."");
 			}
 		}
 		fclose($c['pipes'][1]);
@@ -799,12 +799,12 @@ function checkcstate($c) {
 				fclose($c['pipes'][1]);
 				fclose($c['pipes'][2]);
 				proc_terminate($c['proc'],9);
-				$this->uplink->privmsg($this->c, $c['channel'], "c hard timeout. sending SIGKILL");
+				privmsg($c['channel'], "c hard timeout. sending SIGKILL");
 				return false;
 			} else {
 				proc_terminate($c['proc']);
 				$c['term']=true;
-				$this->uplink->privmsg($this->c, $c['channel'], "c timeout. (maximum of 10 seconds exceeded)  sending SIGTERM"); 
+				privmsg($c['channel'], "c timeout. (maximum of 10 seconds exceeded)  sending SIGTERM"); 
 				return true;
 			}
 		}

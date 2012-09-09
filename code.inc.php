@@ -265,7 +265,7 @@ if ($exp[1] == "PRIVMSG") {
 						$pasteid = $pasteid[count($pasteid)-1];
 						$codecontent = file_get_contents("http://pastebin.com/download.php?i=".$pasteid);
 						if(preg_match("#Unknown Paste ID!#i", $codecontent)) {
-							$this->uplink->notice($this->bot, $user, "Unknown Paste ID!");
+							notice($nick, "Unknown Paste ID!");
 							return;
 						}
 						$code = $codecontent;
@@ -277,7 +277,7 @@ if ($exp[1] == "PRIVMSG") {
 					$phpcache[] = $entry;
 				}
 				break;
-			case "~c":
+			case $trigger."c":
 				if($host[1] == $admin){
 					$kk2 = explode(" ",$fg,4);
 					$act2 = explode(" ",@substr($kk2[3], 1),2);
