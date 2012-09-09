@@ -67,14 +67,14 @@ while (true) {
         }
     }
 	foreach($ccache as $id => $c) {
-		if(!$checkcstate($c)) {
+		if(!checkcstate($c)) {
 			unlink("tmp/debug_".$c['id'].".c");
 			unlink("tmp/debug_".$c['id']);
 			unset($ccache[$id]);
 		}
 	}
 	foreach($phpcache as $id => $php) {
-		if(!$checkphpstate($php)) {
+		if(!checkphpstate($php)) {
 			unset($phpcache[$id]);
 		}
 	}

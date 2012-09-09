@@ -244,88 +244,96 @@ if ($exp[1] == "PRIVMSG") {
 				git($nick);
 				break;
 			case $trigger."php":
-				if(count($phpcache) > 5) {
-					notice($nick, "too many running php processes at the moment!");
-					return;
+				if($host[1] == $admin){
+					$kk2 = explode(" ",$fg,4);
+					$act2 = explode(" ",@substr($kk2[3], 1),2);
+					if(count($phpcache) > 5) {
+						notice($nick, "too many running php processes at the moment!");
+						return;
+					}
+					$entry=array();
+					$entry['channel'] = $exp[2];
+					$descriptor = array(0 => array("pipe", "r"),1 => array("pipe", "w"),2 => array("pipe", "w"));
+					$entry['proc'] = proc_open('php', $descriptor, $entry['pipes']);
+					if(!is_resource($entry['proc'])) {
+						notice($nick, "error while loading php!");
+						return;
+					}
+					$entry['time'] = time();
+					if(preg_match("#pastebin\.com/([a-zA-Z0-9]*)$#i", $act2[1])) {
+						$pasteid = explode("/", $act2[1]);
+						$pasteid = $pasteid[count($pasteid)-1];
+						$codecontent = file_get_contents("http://pastebin.com/download.php?i=".$pasteid);
+						if(preg_match("#Unknown Paste ID!#i", $codecontent)) {
+							$this->uplink->notice($this->bot, $user, "Unknown Paste ID!");
+							return;
+						}
+						$code = $codecontent;
+					} else {
+						$code = "<"."?php " . $act2[1] . " ?".">";
+					};
+					fwrite($entry['pipes'][0], $code);
+					fclose($entry['pipes'][0]);
+					$phpcache[] = $entry;
 				}
-				$entry=array();
-				$entry['channel'] = $exp[2];
-				$descriptor = array(0 => array("pipe", "r"),1 => array("pipe", "w"),2 => array("pipe", "w"));
-				$entry['proc'] = proc_open('php', $descriptor, $entry['pipes']);
-				if(!is_resource($entry['proc'])) {
-					notice($nick, "error while loading php!");
-					return;
-				}
-				$entry['time'] = time();
-                if(preg_match("#pastebin\.com/([a-zA-Z0-9]*)$#i", $exp[4])) {
-                    $pasteid = explode("/", $exp[4]);
-                    $pasteid = $pasteid[count($pasteid)-1];
-                    $codecontent = file_get_contents("http://pastebin.com/download.php?i=".$pasteid);
-                    if(preg_match("#Unknown Paste ID!#i", $codecontent)) {
-                        notice($nick, "Unknown Paste ID!");
-                        return;
-                    }
-                    $code = $codecontent;
-                } else {
-                    $code = "<"."?php " . $exp[1] . " ?".">";
-                };
-				fwrite($entry['pipes'][0], $code);
-				fclose($entry['pipes'][0]);
-				$phpcache[] = $entry;
 				break;
 			case "~c":
-				if(count($ccache) > 5) {
-					notice($nick, "too many running c processes at the moment!");
-					return;
+				if($host[1] == $admin){
+					$kk2 = explode(" ",$fg,4);
+					$act2 = explode(" ",@substr($kk2[3], 1),2);
+					if(count($ccache) > 5) {
+						notice($nick, "too many running c processes at the moment!");
+						return;
+					}
+					$entry=array();
+					$entry['channel'] = $exp[2];
+					$entry['id'] = rand(1, 999999);
+					if(preg_match("#pastebin\.com/([a-zA-Z0-9]*)$#i", $act2[1])) {
+						$pasteid = explode("/", $act2[1]);
+						$pasteid = $pasteid[count($pasteid)-1];
+						$codecontent = file_get_contents("http://pastebin.com/download.php?i=".$pasteid);
+						if(preg_match("#Unknown Paste ID!#i", $codecontent)) {
+							notice($nick, "Unknown Paste ID!");
+							return;
+						}
+						$code = "#include \"includes.h\"
+						".$codecontent;
+					} else {
+						$code = "#include \"includes.h\"
+						".$act2[1];
+					};
+					$fp = fopen("tmp/debug_".$entry['id'].".c", "w");
+					fwrite($fp, $code);
+					fclose($fp);
+					$err = shell_exec("gcc -o tmp/debug_".$entry['id']." tmp/debug_".$entry['id'].".c 2>&1");
+					if($err) {
+						$err=str_replace("\r","",$err);
+						$lines=explode("\n",$err);
+						$i=0;
+						foreach($lines as $line) {
+							if($line == "") continue;
+							$i++;
+							if($i>100) {
+								privmsg($entry['channel'], "too many lines!");
+								break; 
+							}
+							privmsg($entry['channel'], $line);
+						}
+					}
+					if(!file_exists("tmp/debug_".$entry['id'])) {
+						unlink("tmp/debug_".$entry['id'].".c");
+						break;
+					}
+					$descriptor = array(0 => array("pipe", "r"),1 => array("pipe", "w"),2 => array("pipe", "w"));
+					$entry['proc'] = proc_open('tmp/debug_'.$entry['id'], $descriptor, $entry['pipes']);
+					if(!is_resource($entry['proc'])) {
+						notice($nick, "error while loading c!");
+						return;
+					}
+					$entry['time'] = time();
+					fclose($entry['pipes'][0]);
+					$ccache[] = $entry;
 				}
-				$entry=array();
-				$entry['channel'] = $exp[2];
-                $entry['id'] = rand(1, 999999);
-                if(preg_match("#pastebin\.com/([a-zA-Z0-9]*)$#i", $exp[1])) {
-                    $pasteid = explode("/", $exp[1]);
-                    $pasteid = $pasteid[count($pasteid)-1];
-                    $codecontent = file_get_contents("http://pastebin.com/download.php?i=".$pasteid);
-                    if(preg_match("#Unknown Paste ID!#i", $codecontent)) {
-                        notice($nick, "Unknown Paste ID!");
-                        return;
-                    }
-                    $code = "#include \"includes.h\"
-                    ".$codecontent;
-                } else {
-                    $code = "#include \"includes.h\"
-                    ".$exp[1];
-                };
-                $fp = fopen("tmp/debug_".$entry['id'].".c", "w");
-                fwrite($fp, $code);
-                fclose($fp);
-                $err = shell_exec("gcc -o tmp/debug_".$entry['id']." tmp/debug_".$entry['id'].".c 2>&1");
-                if($err) {
-                    $err=str_replace("\r","",$err);
-                    $lines=explode("\n",$err);
-                    $i=0;
-                    foreach($lines as $line) {
-                        if($line == "") continue;
-                        $i++;
-                        if($i>100) {
-                            privmsg($entry['channel'], "too many lines!");
-                            break; 
-                        }
-                        privmsg($$entry['channel'], $line);
-                    }
-                }
-                if(!file_exists("tmp/debug_".$entry['id'])) {
-                    unlink("tmp/debug_".$entry['id'].".c");
-                    break;
-                }
-				$descriptor = array(0 => array("pipe", "r"),1 => array("pipe", "w"),2 => array("pipe", "w"));
-				$entry['proc'] = proc_open('tmp/debug_'.$entry['id'], $descriptor, $entry['pipes']);
-				if(!is_resource($entry['proc'])) {
-					notice($nick, "error while loading c!");
-					return;
-				}
-				$entry['time'] = time();
-				fclose($entry['pipes'][0]);
-				$ccache[] = $entry;
 				break;
 		}
 	}
