@@ -810,6 +810,11 @@ function checkcstate($c) {
 		}
 	}
 }
+
+function slap ($chan, $nick) {
+	privmsg($chan,"\001ACTION slaps ".$nick." around a bit with a large trout\001");
+}
+
 function putSocket ($line) {
     echo(">>$line\n");
     flush();

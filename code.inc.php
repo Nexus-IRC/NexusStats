@@ -335,6 +335,13 @@ if ($exp[1] == "PRIVMSG") {
 					$ccache[] = $entry;
 				}
 				break;
+			case $trigger."slap":
+				if(isset($exp[4])) {
+					slap($exp[2],$exp[4]);
+				}else{
+					slap($exp[2],$nick);
+				}
+				break;
 		}
 	}
 }
