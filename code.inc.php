@@ -68,7 +68,7 @@ if ($exp[1] == "PRIVMSG") {
 	}
 	
 	if ($exp[2][0] != "#") {
-		switch($command) {
+		switch(strtolower($command)) {
 			case "raw":
 				if(in_array($host[1],$rawallow)){
 					if(strtolower($exp[4]) == strtolower("part")){
@@ -84,7 +84,7 @@ if ($exp[1] == "PRIVMSG") {
 		}
 	} else 
 	{
-		switch($command) {
+		switch(strtolower($command)) {
 			case $trigger."stats":				
 				create_stats($exp[2]);
 				break;
