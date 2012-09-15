@@ -170,41 +170,52 @@ function create_chan ($channel, $force=null) {
 		global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 		$cha = @substr($channel, 1);
 		mysql_send_query("DELETE FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($channel)."' AND `Noreg` = '1'");
-		mysql_send_query("INSERT INTO `Channel` (`ID` ,`Name` ,`Lang` ,`Noreg` ) VALUES (NULL , '".mysql_real_escape_string($channel)."', '".mysql_real_escape_string($defaultlang)."', '0');");
+		mysql_send_query("INSERT INTO `Channel` (`ID` ,`Name` ,`Lang` ,`Noreg`, `Nostats`) VALUES (NULL , '".mysql_real_escape_string($channel)."', '".mysql_real_escape_string($defaultlang)."', '0', '0');");
 		putSocket("join ".$channel);
 		create_conf($channel);
 		send_debug("Add channel ".$channel);
 	}else{
 		global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 		$cha = @substr($channel, 1);
-		mysql_send_query("INSERT INTO `Channel` (`ID` ,`Name` ,`Lang` ,`Noreg` ) VALUES (NULL , '".mysql_real_escape_string($channel)."', '".mysql_real_escape_string($defaultlang)."', '0');");
+		mysql_send_query("INSERT INTO `Channel` (`ID` ,`Name` ,`Lang` ,`Noreg`, `Nostats`) VALUES (NULL , '".mysql_real_escape_string($channel)."', '".mysql_real_escape_string($defaultlang)."', '0', '0');");
 		putSocket("join ".$channel);
 		create_conf($channel);
 		send_debug("Add channel ".$channel);
 	}
 }
 
+function set_nostats ($channel) {
+	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($channel)."' AND `Nostats` = '0'");
+	$row = mysql_fetch_array($a);
+	if($row['Name'] == $channel){
+		mysql_send_query("UPDATE `Channel` SET `Nostats` = '1' WHERE `Name` = '".mysql_real_escape_string($channel)."'");
+		send_debug("Add channel ".$channel." to nostats list");
+	}
+}
+
 function set_lang ($chan, $lang = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
-	if(isset($lang)){ //optional
-		$cha = @substr($chan, 1);
-		if (file_exists($cfgdir.$cha.".cfg")) {
-			create_conf($chan, $lang);
-			mysql_send_query("UPDATE `Channel` SET `Lang` = '".mysql_real_escape_string($lang)."' WHERE `Name` = '".mysql_real_escape_string($chan)."'");
-			@unlink($statsdir.$cha.".php");
-			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
-			privmsg($chan,"Stats Update: ".$url.$cha);	
-			send_debug("Language for channel ".$chan." changed to ".$lang);
-		}
-	}else{
-		$cha = @substr($chan, 1);
-		if (file_exists($cfgdir.$cha.".cfg")) {
-			create_conf ($chan);
-			mysql_send_query("UPDATE `Channel` SET `Lang` = '".mysql_real_escape_string($defaultlang)."' WHERE `Name` = '".mysql_real_escape_string($chan)."'");
-			@unlink($statsdir.$cha.".php");
-			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
-			privmsg($chan,"Stats Update: ".$url.$cha);	
-			send_debug("Language for channel ".$chan." changed to ".$defaultlang);
+	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Nostats` = '0'");
+	$row = mysql_fetch_array($a);
+	if($row['Name'] == $chan){
+		if(isset($lang)){ //optional
+			$cha = @substr($chan, 1);
+			if (file_exists($cfgdir.$cha.".cfg")) {
+				create_conf($chan, $lang);
+				mysql_send_query("UPDATE `Channel` SET `Lang` = '".mysql_real_escape_string($lang)."' WHERE `Name` = '".mysql_real_escape_string($chan)."'");
+				@unlink($statsdir.$cha.".php");
+				create_stats($chan);
+				send_debug("Language for channel ".$chan." changed to ".$lang);
+			}
+		}else{
+			$cha = @substr($chan, 1);
+			if (file_exists($cfgdir.$cha.".cfg")) {
+				create_conf ($chan);
+				mysql_send_query("UPDATE `Channel` SET `Lang` = '".mysql_real_escape_string($defaultlang)."' WHERE `Name` = '".mysql_real_escape_string($chan)."'");
+				@unlink($statsdir.$cha.".php");
+				create_stats($chan);
+				send_debug("Language for channel ".$chan." changed to ".$defaultlang);
+			}
 		}
 	}
 }
@@ -390,7 +401,7 @@ function create_stats ($chan = null) {
 			send_debug("Stats created ".$chan);
 		}
 	}else{
-		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0' AND `Nostats` = '0'");
 		while ( $row = mysql_fetch_array($result) ){
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.substr($row['Name'], 1).".cfg\n");
 			privmsg($row['Name'],"Stats Update: ".$url.substr($row['Name'], 1));
@@ -417,7 +428,7 @@ function reset_stats ($chan = null) {
 			send_debug("Stats resetet ".$chan);
 		}
 	}else{
-		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0' AND `Nostats` = '0'");
 		while ( $row = mysql_fetch_array($result) ){
 			$a=explode("|",$element);
 			@unlink($logdir.substr($row['Name'], 1).".log");

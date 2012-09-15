@@ -140,6 +140,17 @@ if ($exp[1] == "PRIVMSG") {
 					break;
 				}
 				break;
+			case $trigger."nostats":
+				if($host[1] == $admin){
+					if(isset($exp[4])){
+						set_nostats($exp[4]);
+					}else{
+						notice($nick,"You must enter a channel name");
+					}
+				}else{
+					break;
+				}
+				break;
 			case $trigger."clist":
 				if($host[1] == $admin){
 					require_once("Table.class.php");
