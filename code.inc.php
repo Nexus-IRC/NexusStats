@@ -108,7 +108,7 @@ if ($exp[1] == "PRIVMSG") {
 						if(strtolower($exp[5])=="force"){
 							create_chan($exp[4],true);
 						}else{
-							$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$exp[4]."' AND `Noreg` = '1'");
+							$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($exp[4])."' AND `Noreg` = '1'");
 							$row = mysql_fetch_array($a);
 							if($row['Name'] == $exp[4]){
 								notice($nick,"The Channel: ".$exp[4]." is on the not register list.");
@@ -352,11 +352,11 @@ if ($exp[1] == "INVITE") {
 	}else{
 		$chan = $exp[3];
 	}
-	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '1'");
+	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Noreg` = '1'");
 	$row = mysql_fetch_array($a);
 	if($row['Name'] == $chan){
 	} else {
-		$b = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".$chan."' AND `Noreg` = '0'");
+		$b = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Noreg` = '0'");
 		$row2 = mysql_fetch_array($b);
 		if($row2['Name'] == $chan){
 			putSocket("join ".$exp[3]);
