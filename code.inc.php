@@ -71,15 +71,17 @@ if ($exp[1] == "PRIVMSG") {
 		switch(strtolower($command)) {
 			case "raw":
 				if(in_array($host[1],$rawallow)){
-					if(strtolower($exp[4]) == strtolower("part")){
-						putSocket("part ".$exp[5]);
-						send_debug($nick." part ".$exp[5]);
-					}				
-					if(strtolower($exp[4]) == strtolower("join")){
-						putSocket("join ".$exp[5]);
-						send_debug($nick." join ".$exp[5]);
+					switch(strtolower($exp[4])) {
+						case "part":
+							putSocket("part ".$exp[5]);
+							send_debug($nick." part ".$exp[5]);
+							break;
+						case "join":
+							putSocket("join ".$exp[5]);
+							send_debug($nick." join ".$exp[5]);
+							break;
 					}
-				}				
+				}
 				break;
 		}
 	} else 
