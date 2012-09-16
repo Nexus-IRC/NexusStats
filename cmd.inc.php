@@ -453,27 +453,25 @@ switch(strtolower($exp[1])) { // raw
 	case "nick":
 		if($nick == $botnick OR $nick == $botnick."|ZNC"){
 		}else{
-			foreach ($channeluser as $chan => $users) { 
-				foreach ($users as $id => $user) { 
-					if ($user == $nick) { 
-						$ni = @substr($exp[2], 1);
-						create_log($chan,"[".@date("H:i")."] *** ".$nick." is now known as ".$ni);
-						who($chan, "2");
-					}
-				} 
+			$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+			while ( $row = mysql_fetch_array($result) ){
+				if(isinchan($nick, $row['Name']) == true) {
+					$ni = @substr($exp[2], 1);
+					create_log($row['Name'],"[".@date("H:i")."] *** ".$nick." is now known as ".$ni);
+					who($row['Name'], "2");
+				}
 			}
 		}
 		break;
 	case "quit":
 		if($nick == $botnick OR $nick == $botnick."|ZNC"){
 		}else{
-			foreach ($channeluser as $chan => $users) { 
-				foreach ($users as $id => $user) { 
-					if ($user == $nick) { 
-						create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") Quit (".@substr($exp[2], 1).")");
-						who($chan, "2");
-					}
-				} 
+			$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+			while ( $row = mysql_fetch_array($result) ){
+				if(isinchan($nick, $row['Name']) == true) {
+					create_log($row['Name'],"[".@date("H:i")."] *** ".$nick." (".$expB[1].") Quit (".@substr($exp[2], 1).")");
+					who($row['Name'], "2");
+				}
 			}
 		}
 		break;
