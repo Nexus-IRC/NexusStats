@@ -154,14 +154,19 @@ function create_debug_log ($data) {
 	}	
 }
  
-function create_noreg ($channel, $nick) {
+function create_noreg ($channel, $nick, $force = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl;
 	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($channel)."' AND `Noreg` = '0'");
 	$row = mysql_fetch_array($a);
 	if($row['Name'] == $channel){
-		del_chan($channel, true);
-		putSocket("PART ".$channel." :Unregistered by ".$nick.".");
-		send_debug("Add ".$channel." to the no register list");
+		if(isset($force)){ //optional
+			del_chan($channel);
+			putSocket("PART ".$channel." :Unregistered by ".$nick.".");
+		}else{
+			del_chan($channel, true);
+			putSocket("PART ".$channel." :Unregistered by ".$nick.".");
+			send_debug("Add ".$channel." to the no register list");
+		}
 	}
 }
 
@@ -401,10 +406,12 @@ function create_stats ($chan = null) {
 			send_debug("Stats created ".$chan);
 		}
 	}else{
-		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0' AND `Nostats` = '0'");
+		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
 		while ( $row = mysql_fetch_array($result) ){
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.substr($row['Name'], 1).".cfg\n");
-			privmsg($row['Name'],"Stats Update: ".$url.substr($row['Name'], 1));
+			if($row['Nostats'] == "1") { } else {
+				privmsg($row['Name'],"Stats Update: ".$url.substr($row['Name'], 1));
+			}
 		}
 		send_debug("Stats created");
 		create_timer("12h","stats");

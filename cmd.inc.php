@@ -102,7 +102,11 @@ switch(strtolower($exp[1])) { // raw
 				case $trigger."unreg":
 					if($host[1] == $admin){
 						if($exp[4]){
-							create_noreg($exp[4],$nick);
+							if(strtolower($exp[5]) == "force"){
+								create_noreg($exp[4],$nick,true);
+							}else{
+								create_noreg($exp[4],$nick);
+							}
 						}else{
 							notice($nick,"You must enter a channel name");
 						}
