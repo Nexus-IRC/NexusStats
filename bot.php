@@ -102,7 +102,7 @@ while (true) {
             putSocket("JOIN ".$debugchannel); //debug channel
 			create_timer("12h","stats");
         }
-		include("code.inc.php");
+		include("cmd.inc.php");
 		
     }
 }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>. 
  */
-switch(strtolower($exp[1])) {
+switch(strtolower($exp[1])) { // raw
 	case "354":
 		if ($exp[3] == "2") {
 			$users[] = $exp[4];
@@ -36,42 +36,48 @@ switch(strtolower($exp[1])) {
 			unset($i);
 		}
 		break;
-
 	case "privmsg":
 		$kk = explode(" ",$fg,4);
 		$act = explode(" ",@substr($kk[3], 1),2);
 		$cha = @substr($kk[2], 1);
-		if($act[0] == "\001ACTION"){
-			if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
-			}else{
-				create_log($kk[2],"[".@date("H:i")."] * ".$nick." ".$act[1]);
-			}
-		}elseif($act[0] == "\001VERSION\001"){
-			if($gitversion){
-				notice($nick,"\001VERSION NexusStats ".$version." by Stricted (".$gitversion.")");
-			}else{
-				notice($nick,"\001VERSION NexusStats ".$version." by Stricted");
-			}
-		}elseif($act[0] == "\001UPTIME\001"){
-			notice($nick,"\001UPTIME ".time2str(time() - $stime));
-		}elseif($act[0] == "\001TIME\001"){
-			$time = @date('r');
-			notice($nick,"\001Time ".$time);
-		}elseif($act[0] == "\001PING"){
-			$ping = ($act[1] - (60*60*1337 + 42*60));
-			notice($nick,"\001PING ".$ping);
-		}else{
-			if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
-			}else{
-				create_log($kk[2],"[".@date("H:i")."] <".$nick."> ".@substr($kk[3], 1));
-			}
+		switch($act[0]) { // ctcp
+			case "\001ACTION":
+				if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
+				}else{
+					create_log($kk[2],"[".@date("H:i")."] * ".$nick." ".$act[1]);
+				}
+				break;
+			case "\001VERSION\001":
+				if($gitversion){
+					notice($nick,"\001VERSION NexusStats ".$version." by Stricted (".$gitversion.")");
+				}else{
+					notice($nick,"\001VERSION NexusStats ".$version." by Stricted");
+				}
+				break;
+			case "\001UPTIME\001":
+				notice($nick,"\001UPTIME ".time2str(time() - $stime));
+				break;
+			case "\001TIME\001":
+				$time = @date('r');
+				notice($nick,"\001Time ".$time);
+				break;
+			case "\001PING":
+				$ping = ($act[1] - (60*60*1337 + 42*60));
+				notice($nick,"\001PING ".$ping);
+				break;
+			default:
+				if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
+				}else{
+					create_log($kk[2],"[".@date("H:i")."] <".$nick."> ".@substr($kk[3], 1));
+				}
+				break;
 		}
 		
 		if ($exp[2][0] != "#") {
-			switch(strtolower($command)) {
+			switch(strtolower($command)) { // query
 				case "raw":
 					if(in_array($host[1],$rawallow)){
-						switch(strtolower($exp[4])) {
+						switch(strtolower($exp[4])) { // query-raw
 							case "part":
 								putSocket("part ".$exp[5]);
 								send_debug($nick." part ".$exp[5]);
@@ -86,7 +92,7 @@ switch(strtolower($exp[1])) {
 			}
 		} else 
 		{
-			switch(strtolower($command)) {
+			switch(strtolower($command)) { // channel
 				case $trigger."stats":				
 					create_stats($exp[2]);
 					break;
@@ -358,7 +364,6 @@ switch(strtolower($exp[1])) {
 			}
 		}
 		break;
-
 	case "invite":
 		if($exp[3][0] == ":") {
 			$chan = @substr($exp[3], 1);
@@ -381,7 +386,6 @@ switch(strtolower($exp[1])) {
 			}
 		}
 		break;
-
 	case "join":
 		if($nick == $botnick OR $nick == $botnick."|ZNC") {
 		}else{
@@ -397,7 +401,6 @@ switch(strtolower($exp[1])) {
 			who($chan, "2");
 		}
 		break;
-
 	case "part":
 		if($nick == $botnick OR $nick == $botnick."|ZNC") {
 		}else{
@@ -413,7 +416,6 @@ switch(strtolower($exp[1])) {
 			who($chan, "2");
 		}
 		break;
-
 	case "mode":
 		$cha = @substr($exp[2], 1);
 		if($nick == $botnick OR $nick == $botnick."|ZNC" OR $cha == $botnick OR $cha == $botnick."|ZNC" OR $cha == substr($botnick, 1) OR $cha == substr($botnick, 1)."|ZNC") {
@@ -421,7 +423,6 @@ switch(strtolower($exp[1])) {
 			create_log($cha,"[".@date("H:i")."] *** ".$nick." sets mode: ".$exp[3]." ".$exp[4]);
 		}
 		break;
-
 	case "kick":
 		if($exp[3] == $botnick OR $exp[3] == $botnick."|ZNC") {
 			del_chan($exp[2]);
@@ -439,7 +440,6 @@ switch(strtolower($exp[1])) {
 			who($chan, "2");
 		}
 		break;
-
 	case "topic":
 		$cha = @substr($exp[2], 1);
 		$kk = explode(" ",$fg,4);
@@ -460,7 +460,6 @@ switch(strtolower($exp[1])) {
 			}
 		}
 		break;
-
 	case "quit":
 		if($nick == $botnick OR $nick == $botnick."|ZNC"){
 		}else{
