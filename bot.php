@@ -93,15 +93,6 @@ while (true) {
         if ($exp[0] == "PING") {
             putSocket("PONG ".$exp[1]);
         }
-        if ($exp[1] == "001") {
-			$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
-			while ( $row = mysql_fetch_array($result) ){
-				putSocket("JOIN ".$row['Name']); //debug channel
-				who($row['Name'], "2");
-			}
-            putSocket("JOIN ".$debugchannel); //debug channel
-			create_timer("12h","stats");
-        }
 		include("cmd.inc.php");
 		
     }

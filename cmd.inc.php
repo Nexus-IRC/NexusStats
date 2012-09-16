@@ -16,6 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>. 
  */
 switch(strtolower($exp[1])) { // raw
+	case "001":
+		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
+		while ( $row = mysql_fetch_array($result) ){
+			putSocket("JOIN ".$row['Name']); //debug channel
+			who($row['Name'], "2");
+		}
+		putSocket("JOIN ".$debugchannel); //debug channel
+		create_timer("12h","stats");
+		break;
 	case "354":
 		if ($exp[3] == "2") {
 			$users[] = $exp[4];
