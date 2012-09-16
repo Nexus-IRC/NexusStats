@@ -829,8 +829,21 @@ function checkcstate($c) {
 	}
 }
 
-function slap ($chan, $nick) {
-	privmsg($chan,"\001ACTION slaps ".$nick." around a bit with a large trout\001");
+function slap ($chan, $nick, $nick2 = null) {
+	if(isinchan($nick, $chan) == true) {
+		privmsg($chan,"\001ACTION slaps ".$nick." around a bit with a large trout\001");
+	}else{
+		notice($nick2,"\002".$nick."\002 is not on \002".$chan."\002.");
+	}
+}
+
+function isinchan ($nick, $channel) {
+	global $channeluser;
+	foreach ($channeluser[$channel] as $id => $user) {
+		if (strtolower($user) == strtolower($nick)) {
+			return true;
+		}
+	}
 }
 
 function putSocket ($line) {

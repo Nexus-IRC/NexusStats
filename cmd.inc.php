@@ -360,9 +360,9 @@ switch(strtolower($exp[1])) { // raw
 					break;
 				case $trigger."slap":
 					if(isset($exp[4])) {
-						slap($exp[2],$exp[4]);
+						slap($exp[2],$exp[4],$nick);
 					}else{
-						slap($exp[2],$nick);
+						slap($exp[2],$nick,$nick);
 					}
 					break;
 			}
