@@ -191,7 +191,7 @@ function set_nostats ($channel) {
 
 function set_lang ($chan, $lang = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
-	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Nostats` = '0'");
+	$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Noreg` = '0'");
 	$row = mysql_fetch_array($a);
 	if($row['Name'] == $chan){
 		if(isset($lang)){ //optional
