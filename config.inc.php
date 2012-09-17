@@ -1,6 +1,6 @@
 <?php
 /* config.php - NexusStats v2.2
- * Copyright (C) 2012  Jan Altensen (Stricted)
+ * Copyright (C) 2012 #Nexus project
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
