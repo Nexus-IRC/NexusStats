@@ -1,0 +1,12 @@
+   	      NexusStats Installation Instructions
+currently only works under linux
+Quick Install:
+----------
+$ php install.php 
+Run NexusStats:
+----------
+$ php bot.php
+
+End of file, INSTALL.
+
+-Stricted (striced@nexus-irc.de)
