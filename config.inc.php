@@ -1,5 +1,5 @@
 <?php
-/* config.php - NexusStats v2.2
+/* config.php - NexusStats v2.3
  * Copyright (C) 2012 #Nexus project
  * 
  * This program is free software: you can redistribute it and/or modify

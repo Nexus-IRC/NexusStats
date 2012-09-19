@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-/* install.php - NexusStats v2.2
+/* install.php - NexusStats v2.3
  * Copyright (C) 2012 #Nexus project
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -193,7 +193,7 @@ if($install ==true){
 	$maincode = str_replace('$mysql_pw="";', '$mysql_pw="'.$data['pass'].'";', $maincode);
 	$maincode = str_replace('$mysql_db="";', '$mysql_db="'.$data['base'].'";', $maincode);
 	$maincode = str_replace('$install=true;', '$install=false;', $maincode);
-	$maincode = str_replace('$version="";', '$version="2.2";', $maincode);
+	$maincode = str_replace('$version="";', '$version="2.3";', $maincode);
 	$fp = fopen("config.inc.php", 'w');
 	fwrite($fp, $maincode);
 	fclose($fp);

@@ -1,5 +1,5 @@
 <?php
-/* Table.class.php - NexusStats v2.2
+/* Table.class.php - NexusStats v2.3
  * Copyright (C) 2011-2012  Philipp Kreil (pk910)
  * 
  * This program is free software: you can redistribute it and/or modify
