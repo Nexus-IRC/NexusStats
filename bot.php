@@ -39,7 +39,7 @@ $glob=array();
 $phpcache=array();
 $ccache=array();
 $connect = mysql_connect($mysql_host, $mysql_user, $mysql_pw);
-$rawallow=array("NeonServ.bot.krypton-bouncer.de","Stricted2.user.OnlineGamesNet");
+$rawallow=array("NeonServ","Stricted2");
 $db = mysql_select_db($mysql_db, $connect);
 stream_set_blocking($socket,0);
 putSocket("PASS ".$pass);

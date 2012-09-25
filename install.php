@@ -96,10 +96,10 @@ if($install ==true){
 	if($line == "") $line = "OnlineGamesNet";
 	$data['network'] = $line;
 
-	echo "Admin [Stricted2.user.OnlineGamesNet]: ";
+	echo "Admin [Stricted2]: ";
 	$line = fgets($fp, 4096);
 	$line = str_replace(array("\n", "\r"),array("", ""),$line);
-	if($line == "") $line = "Stricted2.user.OnlineGamesNet";
+	if($line == "") $line = "Stricted2";
 	$data['admin'] = $line;
 
 	echo "Logdir [/home/stats/pisg-0.73/log/]: ";

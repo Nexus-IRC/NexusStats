@@ -89,7 +89,7 @@ switch(strtolower($exp[1])) { // raw
 		if ($exp[2][0] != "#") {
 			switch(strtolower($command)) { // query
 				case "raw":
-					if(in_array($host[1],$rawallow)){
+					if(in_array(getauth($nick),$rawallow)){
 						switch(strtolower($exp[4])) { // query-raw
 							case "part":
 								putSocket("part ".$exp[5]);
@@ -113,7 +113,7 @@ switch(strtolower($exp[1])) { // raw
 					check_stats($exp[2]);
 					break;
 				case $trigger."unreg":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						if($exp[4]){
 							if(strtolower($exp[5]) == "force"){
 								create_noreg($exp[4],$nick,true);
@@ -128,7 +128,7 @@ switch(strtolower($exp[1])) { // raw
 					}
 					break;
 				case $trigger."reg":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						if($exp[4]){
 							if(strtolower($exp[5])=="force"){
 								create_chan($exp[4],true);
@@ -149,7 +149,7 @@ switch(strtolower($exp[1])) { // raw
 					}
 					break;					
 				case $trigger."setlang":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						if(isset($exp[4])){
 							if(isset($exp[5])){
 								set_lang($exp[4],$exp[5]);
@@ -166,7 +166,7 @@ switch(strtolower($exp[1])) { // raw
 					}
 					break;
 				case $trigger."nostats":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						if(isset($exp[4])){
 							set_nostats($exp[4]);
 						}else{
@@ -177,7 +177,7 @@ switch(strtolower($exp[1])) { // raw
 					}
 					break;
 				case $trigger."clist":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						require_once("Table.class.php");
 						$table = new Table(3);
 						$table->add("Name", "Lang", "URL");
@@ -199,14 +199,14 @@ switch(strtolower($exp[1])) { // raw
 					}
 					break;
 				case $trigger."debug":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						debug($exp[2]);						
 					}else{
 						break;
 					}
 					break;
 				case $trigger."resetstats":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						if(isset($exp[4])){
 							reset_stats($exp[4]);
 						}else{
@@ -230,7 +230,7 @@ switch(strtolower($exp[1])) { // raw
 					notice($nick, " Calisto      (ideas)");
 					break;
 				case $trigger."checkversion":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						check_version($nick);			
 					}else{
 						break;
@@ -280,7 +280,7 @@ switch(strtolower($exp[1])) { // raw
 					git($nick);
 					break;
 				case $trigger."php":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						$kk2 = explode(" ",$fg,4);
 						$act2 = explode(" ",@substr($kk2[3], 1),2);
 						if(count($phpcache) > 5) {
@@ -314,7 +314,7 @@ switch(strtolower($exp[1])) { // raw
 					}
 					break;
 				case $trigger."c":
-					if($host[1] == $admin){
+					if(getauth($nick) == $admin){
 						$kk2 = explode(" ",$fg,4);
 						$act2 = explode(" ",@substr($kk2[3], 1),2);
 						if(count($ccache) > 5) {
