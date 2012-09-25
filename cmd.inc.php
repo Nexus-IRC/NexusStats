@@ -471,6 +471,7 @@ switch(strtolower($exp[1])) { // raw
 				if(isinchan($nick, $row['Name']) == true) {
 					$ni = @substr($exp[2], 1);
 					create_log($row['Name'],"[".@date("H:i")."] *** ".$nick." is now known as ".$ni);
+					unset($auth[strtolower($nick)]);
 					who($row['Name'], "2");
 				}
 			}
@@ -483,6 +484,7 @@ switch(strtolower($exp[1])) { // raw
 			while ( $row = mysql_fetch_array($result) ){
 				if(isinchan($nick, $row['Name']) == true) {
 					create_log($row['Name'],"[".@date("H:i")."] *** ".$nick." (".$expB[1].") Quit (".@substr($exp[2], 1).")");
+					unset($auth[strtolower($nick)]);
 					who($row['Name'], "2");
 				}
 			}
