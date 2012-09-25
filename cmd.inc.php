@@ -26,11 +26,9 @@ switch(strtolower($exp[1])) { // raw
 		create_timer("12h","stats");
 		break;
 	case "354":
-		if ($exp[3] == "1") {
-			$auth[strtolower($exp[4])] = $exp[5];
-		}		
 		if ($exp[3] == "2") {
 			$users[] = $exp[4];
+			$auth1[strtolower($exp[4])] = $exp[6];
 		}
 		break;
 	case  "315":
@@ -43,8 +41,8 @@ switch(strtolower($exp[1])) { // raw
 			foreach ($users as $unick) {
 				$i++;
 				$channeluser[$target][$i] = $unick;
+				$auth[strtolower($unick)] = $auth1[strtolower($unick)];
 			}
-			getauths($target);
 			unset($users);
 			unset($i);
 		}

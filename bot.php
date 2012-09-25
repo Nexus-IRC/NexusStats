@@ -517,13 +517,6 @@ function who ($target, $args) {
 	}
 }
 
-function getauths ($chan) {
-	global $channeluser;
-	foreach ($channeluser[$chan] as $id => $user) {
-		who($user, "1");
-	}
-}
-
 function getauth ($nick) {
 	global $auth;
 	return $auth[strtolower($nick)];
