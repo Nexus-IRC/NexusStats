@@ -34,6 +34,7 @@ $timer = time();
 $stime = time();
 $fgr = "";
 $channeluser=array();
+$auth=array();
 $glob=array();
 $phpcache=array();
 $ccache=array();
@@ -514,6 +515,18 @@ function who ($target, $args) {
 	}else{
 		putSocket("WHO ".$target.",".$args." %tna,".$args);
 	}
+}
+
+function getauths ($chan) {
+	global $channeluser;
+	foreach ($channeluser[$chan] as $id => $user) {
+		who($user, "1");
+	}
+}
+
+function getauth ($nick) {
+	global $auth;
+	return $auth[strtolower($nick)];
 }
 
 function str2time ($line) {

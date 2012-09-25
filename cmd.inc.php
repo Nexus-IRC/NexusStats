@@ -1,5 +1,5 @@
 <?php     
-/* cmd.inc.php - NexusStats v2.3
+/* code.inc.php - NexusStats v2.3
  * Copyright (C) 2012 #Nexus project
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,9 @@ switch(strtolower($exp[1])) { // raw
 		create_timer("12h","stats");
 		break;
 	case "354":
+		if ($exp[3] == "1") {
+			$auth[strtolower($exp[4])] = $exp[5];
+		}		
 		if ($exp[3] == "2") {
 			$users[] = $exp[4];
 		}
@@ -41,6 +44,7 @@ switch(strtolower($exp[1])) { // raw
 				$i++;
 				$channeluser[$target][$i] = $unick;
 			}
+			getauths($target);
 			unset($users);
 			unset($i);
 		}
