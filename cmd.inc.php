@@ -31,7 +31,16 @@ switch(strtolower($exp[1])) { // raw
 			$auth1[strtolower($exp[4])] = $exp[6];
 		}
 		break;
-	case  "315":
+	case "473":
+		send_debug("Cannot join channel ".$exp[3]." (+i)");
+		break;
+	case "474":
+		send_debug("Cannot join channel ".$exp[3]." (+b)");
+		break;
+	case "475":
+		send_debug("Cannot join channel ".$exp[3]." (+k)");
+		break;
+	case "315":
 		$x = explode(",",$exp[3]);
 		$target = $x[0];
 		$id = $x[1];
