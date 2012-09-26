@@ -54,6 +54,7 @@ switch(strtolower($exp[1])) { // raw
 			}
 			unset($users);
 			unset($i);
+			send_debug("who channel ".$target);
 		}
 		break;
 	case "privmsg":
