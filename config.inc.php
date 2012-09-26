@@ -38,6 +38,7 @@ $mysql_host="";
 $mysql_user="";
 $mysql_pw="";
 $mysql_db="";
+$showdebug=true;// channel debug output true-> send to channel false-> send only to debug.log
 /* Config end */
 
 /* dont touch this --> */
@@ -45,5 +46,5 @@ $gitversion="";
 $codelines="";
 $creation="";
 $install=true;
-/* <-- Sont touch this */
+/* <-- dont touch this */
 ?>

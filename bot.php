@@ -633,12 +633,16 @@ function time2str ($line) {
 }
 
 function send_debug ($data, $channel = null){
-	global $debugchannel;
+	global $debugchannel, $showdebug;
 	if(isset($channel)){
-		privmsg($channel, "[Debug] ".$data);
+		if($showdebug) {
+			privmsg($channel, "[Debug] ".$data);
+		}
 		create_debug_log("[Debug] ".$data);
 	}else{
-		privmsg($debugchannel, "[Debug] ".$data);
+		if($showdebug) {
+			privmsg($debugchannel, "[Debug] ".$data);
+		}
 		create_debug_log("[Debug] ".$data);
 	}
 }
