@@ -40,6 +40,9 @@ switch(strtolower($exp[1])) { // raw
 	case "475":
 		send_debug("Cannot join channel ".$exp[3]." (+k)");
 		break;
+	case "345":
+		send_debug("[".$exp[2]."] ".$exp[3]." has been invited by ".$exp[4]."");
+		break;
 	case "315":
 		$x = explode(",",$exp[3]);
 		$target = $x[0];
