@@ -441,7 +441,7 @@ switch(strtolower($exp[1])) { // raw
 				$chan = $exp[2];
 			}
 			create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") has left ".$chan);
-			who($chan, "2");
+			unset($channeluser[$chan][$nick]);
 		}
 		break;
 	case "mode":
@@ -465,7 +465,7 @@ switch(strtolower($exp[1])) { // raw
 			}
 			$cha = @substr($exp[2], 1);
 			create_log($chan,"[".@date("H:i")."] *** ".$exp[3]." was kicked by ".$nick." (".@substr($exp[4], 1).")");
-			who($chan, "2");
+			unset($channeluser[$chan][$exp[3]]);
 		}
 		break;
 	case "topic":
@@ -496,7 +496,7 @@ switch(strtolower($exp[1])) { // raw
 				if(isinchan($nick, $row['Name']) == true) {
 					create_log($row['Name'],"[".@date("H:i")."] *** ".$nick." (".$expB[1].") Quit (".@substr($exp[2], 1).")");
 					unset($auth[strtolower($nick)]);
-					who($row['Name'], "2");
+					unset($channeluser[$row['Name']][$exp[3]]);
 				}
 			}
 		}
