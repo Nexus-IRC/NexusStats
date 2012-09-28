@@ -421,6 +421,7 @@ switch(strtolower($exp[1])) { // raw
 				create_chan($exp[3]);
 				who($exp[3], "2");
 			}
+			send_debug("[".$exp[3]."] ".$exp[2]." has been invited by ".$nick."");
 		}
 		break;
 	case "join":
@@ -483,6 +484,9 @@ switch(strtolower($exp[1])) { // raw
 			$cha = @substr($exp[2], 1);
 			create_log($chan,"[".@date("H:i")."] *** ".$exp[3]." was kicked by ".$nick." (".@substr($exp[4], 1).")");
 			unset($channeluser[$chan][$exp[3]]);
+			if(isonchannel($exp[3])) { }else{
+				unset($auth[strtolower($exp[3])]);
+			}
 		}
 		break;
 	case "topic":
@@ -517,7 +521,7 @@ switch(strtolower($exp[1])) { // raw
 				if(isinchan($nick, $row['Name']) == true) {
 					create_log($row['Name'],"[".@date("H:i")."] *** ".$nick." (".$expB[1].") Quit (".@substr($exp[2], 1).")");
 					unset($auth[strtolower($nick)]);
-					unset($channeluser[$row['Name']][$exp[3]]);
+					unset($channeluser[$row['Name']][$nick]);
 				}
 			}
 		}
