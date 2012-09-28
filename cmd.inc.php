@@ -19,10 +19,10 @@ switch(strtolower($exp[1])) { // raw
 	case "001":
 		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
 		while ( $row = mysql_fetch_array($result) ){
-			putSocket("JOIN ".$row['Name']); //debug channel
+			putSocket("JOIN ".$row['Name']); // join channels
 			who($row['Name'], "2");
 		}
-		putSocket("JOIN ".$debugchannel); //debug channel
+		putSocket("JOIN ".$debugchannel); // debug channel
 		create_timer("12h","stats");
 		break;
 	case "354":
@@ -55,12 +55,12 @@ switch(strtolower($exp[1])) { // raw
 			$i=0;
 			foreach ($users as $unick) {
 				$i++;
-				$channeluser[$target][$i] = $unick;
+				$channeluser[$target][$unick] = $unick;
 				$auth[strtolower($unick)] = $auth1[strtolower($unick)];
 			}
 			unset($users);
 			unset($i);
-			send_debug("who channel ".$target);
+			send_debug("[who] ".$target);
 		}
 		break;
 	case "privmsg":
@@ -429,7 +429,11 @@ switch(strtolower($exp[1])) { // raw
 				$chan = $exp[2];
 			}
 			create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") has joined ".$chan);
-			who($chan, "2");
+			if(isset($auth[strtolower($nick)])) { 
+				$channeluser[$chan][$nick] = $nick;
+			} else {
+				who($chan, "2");
+			}
 		}
 		break;
 	case "part":
@@ -485,8 +489,12 @@ switch(strtolower($exp[1])) { // raw
 				if(isinchan($nick, $row['Name']) == true) {
 					$ni = @substr($exp[2], 1);
 					create_log($row['Name'],"[".@date("H:i")."] *** ".$nick." is now known as ".$ni);
+					if(isset($auth[strtolower($ni)])) { } else {
+						$auth[strtolower($ni)] = $auth[strtolower($nick)];
+					}
 					unset($auth[strtolower($nick)]);
-					who($row['Name'], "2");
+					$channeluser[$row['Name']][$ni] = $ni;
+					unset($channeluser[$row['Name']][$nick]);
 				}
 			}
 		}
