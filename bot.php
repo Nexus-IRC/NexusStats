@@ -847,6 +847,17 @@ function isinchan ($nick, $channel) {
 	}
 }
 
+function isonchannel ($nick) {
+	global $channeluser;
+	foreach ($channeluser as $chan => $users) { 
+		foreach ($users as $id => $user) { 
+			if ($user == $nick) { 
+				return true;
+			}
+		}
+	}
+}
+
 function putSocket ($line) {
     echo(">>$line\n");
     flush();

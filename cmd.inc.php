@@ -26,9 +26,15 @@ switch(strtolower($exp[1])) { // raw
 		create_timer("12h","stats");
 		break;
 	case "354":
-		if ($exp[3] == "2") {
-			$users[] = $exp[4];
-			$auth1[strtolower($exp[4])] = $exp[6];
+		switch(strtolower($exp[3])) {
+			case "1":
+				$auth[strtolower($exp[4])] = $exp[5];
+				send_debug("[who] [user] ".$exp[4]);
+				break;
+			case "2":
+				$users[] = $exp[4];
+				$auth1[strtolower($exp[4])] = $exp[6];
+				break;
 		}
 		break;
 	case "471":
@@ -60,7 +66,7 @@ switch(strtolower($exp[1])) { // raw
 			}
 			unset($users);
 			unset($i);
-			send_debug("[who] ".$target);
+			send_debug("[who] [channel] ".$target);
 		}
 		break;
 	case "privmsg":
@@ -432,7 +438,8 @@ switch(strtolower($exp[1])) { // raw
 			if(isset($auth[strtolower($nick)])) { 
 				$channeluser[$chan][$nick] = $nick;
 			} else {
-				who($chan, "2");
+				who($nick, "1");
+				$channeluser[$chan][$nick] = $nick;
 			}
 		}
 		break;
@@ -449,6 +456,9 @@ switch(strtolower($exp[1])) { // raw
 			}
 			create_log($chan,"[".@date("H:i")."] *** ".$nick." (".$expB[1].") has left ".$chan);
 			unset($channeluser[$chan][$nick]);
+			if(isonchannel($nick)) { }else{
+				unset($auth[strtolower($nick)]);
+			}
 		}
 		break;
 	case "mode":
