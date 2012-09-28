@@ -31,6 +31,9 @@ switch(strtolower($exp[1])) { // raw
 			$auth1[strtolower($exp[4])] = $exp[6];
 		}
 		break;
+	case "471":
+		send_debug("Cannot join channel ".$exp[3]." (+l)");
+		break;
 	case "473":
 		send_debug("Cannot join channel ".$exp[3]." (+i)");
 		break;
@@ -104,11 +107,11 @@ switch(strtolower($exp[1])) { // raw
 						switch(strtolower($exp[4])) { // query-raw
 							case "part":
 								putSocket("part ".$exp[5]);
-								send_debug($nick." part ".$exp[5]);
+								send_debug("[".$nick."] [RAW] part ".$exp[5]);
 								break;
 							case "join":
 								putSocket("join ".$exp[5]);
-								send_debug($nick." join ".$exp[5]);
+								send_debug("[".$nick."] [RAW] join ".$exp[5]);
 								break;
 						}
 					}
