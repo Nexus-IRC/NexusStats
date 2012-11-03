@@ -394,7 +394,9 @@ function create_stats ($chan = null) {
 			$cha = @substr($chan, 1);
 			@unlink($statsdir.$cha.".php");
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
-			privmsg($chan,"Stats Update: ".$url.$cha);
+			if($row['Nostats'] == "1") { } else {
+				privmsg($chan,"Stats Update: ".$url.$cha);
+			}
 			send_debug("Stats created ".$chan);
 		}
 	}else{
@@ -410,7 +412,7 @@ function create_stats ($chan = null) {
 	}
 }
 
-function reset_stats ($chan = null) {
+function c ($chan = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick;
 	if(isset($chan)){ //optional
 		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Noreg` = '0'");
@@ -421,13 +423,15 @@ function reset_stats ($chan = null) {
 			mkdir($archivdir, 0755);
 			copy($statsdir.substr($chan, 1).".php", $archivdir.substr($chan, 1).".php");
 			@unlink($statsdir.substr($chan, 1).".php");
-			privmsg($chan,"Stats Reset, Archiv: ".$aurl.substr($chan, 1));
+			if($row['Nostats'] == "0"){
+				privmsg($chan,"Stats Reset, Archiv: ".$aurl.substr($chan, 1));
+			}
 			create_log($chan, "[".@date("H:i")."] <".$botnick."> send a log text to create logfiles");
 			create_stats($chan);
 			send_debug("Stats resetet ".$chan);
 		}
 	}else{
-		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0' AND `Nostats` = '0'");
+		$result = mysql_send_query("SELECT * FROM `Channel` WHERE `Noreg` = '0'");
 		while ( $row = mysql_fetch_array($result) ){
 			$a=explode("|",$element);
 			@unlink($logdir.substr($row['Name'], 1).".log");
@@ -435,7 +439,9 @@ function reset_stats ($chan = null) {
 			mkdir($archivdir, 0755);
 			copy($statsdir.substr($row['Name'], 1).".php", $archivdir.substr($row['Name'], 1).".php");
 			@unlink($statsdir.substr($row['Name'], 1).".php");
-			privmsg($row['Name'],"Stats Reset, Archiv: ".$aurl.substr($row['Name'], 1));
+			if($row['Nostats'] == "0"){
+				privmsg($row['Name'],"Stats Reset, Archiv: ".$aurl.substr($row['Name'], 1));
+			}
 			create_log($row['Name'], "[".@date("H:i")."] <".$botnick."> send a log text to create logfiles");
 			create_stats($row['Name']);
 		}
