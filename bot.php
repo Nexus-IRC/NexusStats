@@ -412,7 +412,7 @@ function create_stats ($chan = null) {
 	}
 }
 
-function c ($chan = null) {
+function reset_stats ($chan = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick;
 	if(isset($chan)){ //optional
 		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Noreg` = '0'");
