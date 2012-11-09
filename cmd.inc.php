@@ -23,7 +23,7 @@ switch(strtolower($exp[1])) { // raw
 			who($row['Name'], "2");
 		}
 		putSocket("JOIN ".$debugchannel); // debug channel
-		create_timer("12h","stats");
+		create_timer("1m","stats");
 		break;
 	case "354":
 		switch(strtolower($exp[3])) {
@@ -126,7 +126,21 @@ switch(strtolower($exp[1])) { // raw
 		} else 
 		{
 			switch(strtolower($command)) { // channel
-				case $trigger."stats":				
+				case $trigger."kaffee":
+					if($exp[4]){
+						privmsg($exp[2],"ACTION gibt ".$exp[4]." einen heiﬂen Kaffee");
+					}else{
+						privmsg($exp[2],"ACTION gibt ".$nick." einen heiﬂen Kaffee");
+					}
+					break;
+				case $trigger."kakao":
+					if($exp[4]){
+						privmsg($exp[2],"ACTION gibt ".$exp[4]." einen heiﬂen Kakao mit Sahne");
+					}else{
+						privmsg($exp[2],"ACTION gibt ".$nick." einen heiﬂen Kakao mit Sahne");
+					}
+					break;
+				case $trigger."stats":
 					create_stats($exp[2]);
 					break;
 				case $trigger."checkstats":
