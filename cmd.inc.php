@@ -262,6 +262,7 @@ switch(strtolower($exp[1])) { // raw
 					notice($nick, " Ultrashadow  (testing and ideas)");
 					notice($nick, " pk910        (ideas)");
 					notice($nick, " Calisto      (ideas)");
+					notice($nick, "If you found a bug or if you have a good idea report it on http://bugtracker.nexus-irc.de/");
 					break;
 				case $trigger."checkversion":
 					if(getauth($nick) == $admin){
@@ -283,7 +284,8 @@ switch(strtolower($exp[1])) { // raw
 						putSocket("NOTICE $nick :\002Version            \002:     ".$version);
 					}
 					putSocket("NOTICE $nick :\002Parser             \002:     ".PHP_VERSION);
-					putSocket("NOTICE $nick :\002Code               \002:     ".$codelines." lines PHP code (view it at http://git.nexus-irc.de/?p=NexusStats.git)");          
+					putSocket("NOTICE $nick :\002Code               \002:     ".$codelines." lines PHP code (view it at http://git.nexus-irc.de/?p=NexusStats.git)");
+					putSocket("NOTICE $nick :If you found a bug or if you have a good idea report it on http://bugtracker.nexus-irc.de/");
 					break;
 				case $trigger."google":
 					if(isset($exp[4])){

@@ -60,7 +60,6 @@ while (true) {
     }    
     if (time() >= $timer + 1) {
         $timer = time();
-        $thistime = time();
         foreach ($dltimer as $thetime => $evntarray) {
             if ($thetime <= time()) {
                 timer_evnts($thetime,1);
