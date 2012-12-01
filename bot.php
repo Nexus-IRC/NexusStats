@@ -387,13 +387,13 @@ function check_stats ($chan = null) {
 function create_stats ($chan = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang;
 	if(isset($chan)){ //optional
-		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Noreg` = '0'");
+		$a = mysql_send_query("SELECT * FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Noreg` = '0'");
 		$row = mysql_fetch_array($a);
 		if($row['Name'] == $chan){
 			$cha = @substr($chan, 1);
 			@unlink($statsdir.$cha.".php");
 			shell_exec($pisgdir."pisg --configfile=".$cfgdir.$cha.".cfg");
-			if($row['Nostats'] == "1") { } else {
+			if($row['Nostats'] == "0") {
 				privmsg($chan,"Stats Update: ".$url.$cha);
 			}
 			send_debug("Stats created ".$chan);
@@ -414,7 +414,7 @@ function create_stats ($chan = null) {
 function reset_stats ($chan = null) {
 	global $logdir,	$cfgdir, $statsdir, $archivdir, $pisgdir, $url, $aurl, $defaultlang, $botnick;
 	if(isset($chan)){ //optional
-		$a = mysql_send_query("SELECT Name FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Noreg` = '0'");
+		$a = mysql_send_query("SELECT * FROM `Channel` WHERE `Name` = '".mysql_real_escape_string($chan)."' AND `Noreg` = '0'");
 		$row = mysql_fetch_array($a);
 		if($row['Name'] == $chan){
 			@unlink($logdir.substr($chan, 1).".log");
