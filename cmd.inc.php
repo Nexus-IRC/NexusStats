@@ -264,13 +264,6 @@ switch(strtolower($exp[1])) { // raw
 					notice($nick, " Calisto      (ideas)");
 					notice($nick, "If you found a bug or if you have a good idea report it on http://bugtracker.nexus-irc.de/");
 					break;
-				case $trigger."checkversion":
-					if(getauth($nick) == $admin){
-						check_version($nick);			
-					}else{
-						break;
-					}
-					break;
 				case $trigger."info":
 					putSocket("NOTICE $nick :\002Bot information\002");
 					putSocket("NOTICE $nick :\002Bot Uptime         \002:     ".time2str(time() - $stime));
