@@ -128,16 +128,16 @@ switch(strtolower($exp[1])) { // raw
 			switch(strtolower($command)) { // channel
 				case $trigger."kaffee":
 					if($exp[4]){
-						privmsg($exp[2],"ACTION gibt ".$exp[4]." einen heiﬂen Kaffee");
+						privmsg($exp[2],"\001ACTION gibt ".$exp[4]." einen heiﬂen Kaffee\001");
 					}else{
-						privmsg($exp[2],"ACTION gibt ".$nick." einen heiﬂen Kaffee");
+						privmsg($exp[2],"\001ACTION gibt ".$nick." einen heiﬂen Kaffee");
 					}
 					break;
 				case $trigger."kakao":
 					if($exp[4]){
-						privmsg($exp[2],"ACTION gibt ".$exp[4]." einen heiﬂen Kakao mit Sahne");
+						privmsg($exp[2],"\001ACTION gibt ".$exp[4]." einen heiﬂen Kakao mit Sahne\001");
 					}else{
-						privmsg($exp[2],"ACTION gibt ".$nick." einen heiﬂen Kakao mit Sahne");
+						privmsg($exp[2],"\001ACTION gibt ".$nick." einen heiﬂen Kakao mit Sahne\001");
 					}
 					break;
 				case $trigger."stats":
