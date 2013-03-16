@@ -21,6 +21,9 @@ if($install ==true){
 	echo"run install.php\n";
 	exit(0);
 }
+if(!isset(ini_get('date.timezone'))){
+	init_set('date.timezone', 'Europe/Berlin');
+}
 /* config end */
 echo("################################\n");
 echo("#### Starting NexusStats        \n");
