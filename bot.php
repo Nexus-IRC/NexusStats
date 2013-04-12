@@ -21,8 +21,10 @@ if($install ==true){
 	echo"run install.php\n";
 	exit(0);
 }
-if(!isset(ini_get('date.timezone'))){
-	init_set('date.timezone', 'Europe/Berlin');
+if (function_exists('ini_get') && function_exists('ini_set')) {
+	if(!isset(ini_get('date.timezone'))){
+		ini_set('date.timezone', 'Europe/Berlin');
+	}
 }
 /* config end */
 echo("################################\n");
